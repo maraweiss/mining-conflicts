@@ -14,14 +14,15 @@ setwd("~/Master thesis/Data")
 conflicts <- fromJSON(file = "~/Master thesis/Data/ejatlas.json")
 
 # change data frame
+#conflicts[order(sapply(conflicts, "[[", 1))]
 
 ##################### COUNTRY ############################################
 # load ejatlas data from json file
 #conflicts <- fromJSON(file = "~/Master thesis/Data/ejatlas.json")
 
 # get all elements of list in list
-conflicts %>%
-  map("Country")
+#conflicts %>%
+  #map("Country")
 
 # count and arrange in descending order
 plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "Country"), "["))), desc(freq))
@@ -32,8 +33,8 @@ plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "Country"), "["))), desc(
 #conflicts <- fromJSON(file = "~/Master thesis/Data/ejatlas.json")
 
 # get all elements of list in list
-conflicts %>%
-  map("AccuracyOfLocation")
+#conflicts %>%
+ # map("AccuracyOfLocation")
 
 # count and arrange in descending order
 plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "AccuracyOfLocation"), "["))), desc(freq))
@@ -66,8 +67,8 @@ plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "AccuracyOfLocation"), "[
 #conflicts <- fromJSON(file = "~/Master thesis/Data/ejatlas.json")
 
 # get all elements of list in list
-conflicts %>%
-  map("SpecificCommodities")
+#conflicts %>%
+  #map("SpecificCommodities")
 
 # count and arrange in descending order
 plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "SpecificCommodities"), "["))), desc(freq))
@@ -119,6 +120,9 @@ substitutes_commodity = list(
 
 remove_commodity = c("colimdeno")
 
+# add elements
+conflicts[[120]]$SpecificCommodities <- c("copper")
+conflicts[[242]]$SpecificCommodities <- c("copper")
 
 # create for loop
 for(i in seq(1,length(conflicts))){
@@ -185,8 +189,8 @@ plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "SpecificCommodities"), "
 #conflicts <- fromJSON(file = "~/Master thesis/Data/ejatlas.json")
 
 # get all elements of list in list
-conflicts %>%
-  map("TypeOfPopulation")
+#conflicts %>%
+  #map("TypeOfPopulation")
 
 # count and arrange in descending order
 plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "TypeOfPopulation"), "["))), desc(freq))
@@ -213,8 +217,8 @@ plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "TypeOfPopulation"), "[")
 #conflicts <- fromJSON(file = "~/Master thesis/Data/ejatlas.json")
 
 # get all elements of list in list
-conflicts %>%
-  map("ReactionStage")
+#conflicts %>%
+  #map("ReactionStage")
 
 # count and arrange in descending order
 plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "ReactionStage"), "["))), desc(freq))
@@ -254,8 +258,8 @@ plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "ReactionStage"), "["))),
 #conflicts <- fromJSON(file = "~/Master thesis/Data/ejatlas.json")
 
 # get all elements of list in list
-conflicts %>%
-  map("GroupsMobilizing")
+#conflicts %>%
+  #map("GroupsMobilizing")
 
 # count and arrange in descending order
 plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "GroupsMobilizing"), "["))), desc(freq))
@@ -464,8 +468,8 @@ plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "GroupsMobilizing"), "[")
 #conflicts <- fromJSON(file = "~/Master thesis/Data/ejatlas.json")
 
 # get all elements of list in list
-conflicts %>%
-  map("FormsOfMobilization")
+#conflicts %>%
+ # map("FormsOfMobilization")
 
 # count and arrange in descending order
 plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "FormsOfMobilization"), "["))), desc(freq))
@@ -553,9 +557,9 @@ c("referendum other local consultations", "public consultation in district of to
 
 c("public campaigns", "campaas de concientizacin a la poblacin sobre el tema. propuesta al concejo deliberante municipal de llevar adelante un plebiscito."),
 
-c("land occupation", "the mining camp occupation and expulsion of the mining workers."),
+c("land occupation", "the mining camp occupation and expulsion of the mining workers.")
 
-c("hunger strikes and self immolation", "hunger strike") # leads to result "hunger strikes and self immolation and self immolation"
+#c("hunger strikes and self immolation", "hunger strike") # leads to result "hunger strikes and self immolation and self immolation"
 
 
 
@@ -673,7 +677,7 @@ for(i in seq(1,length(conflicts))){
   conflicts[[i]]$FormsOfMobilization = unlist(lapply(conflicts[[i]]$FormsOfMobilization, tolower))
   
   # split elements separated by "//"
-  conflicts[[i]]$FormsOfMobilization = unlist(strsplit(conflicts[[i]]$FormsOfMobilization, "//"))
+  conflicts[[i]]$FormsOfMobilization = unlist(strsplit(conflicts[[i]]$FormsOfMobilization, " // "))
   
   
   
@@ -698,7 +702,7 @@ for(i in conflicts){
 # count again
 plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "FormsOfMobilization"), "["))), desc(freq))
 
-##### ERRORS: (proposal of) declaration ... & retention or kidnapping are not counted together WHY?; hunger strikes and self immolation and self immolation###
+##### ERROR: hunger strikes and self immolation and self immolation###
 
 # Figure FormsOfMobilization
 
@@ -709,8 +713,8 @@ forms_data <- forms_data %>%
   dplyr::select(forms_of_mobilization = x, count = freq)
 
 # filter > 1
-forms_data <- forms_data %>%
-  filter(count > 1)
+#forms_data <- forms_data %>%
+ # filter(count > 1)
 
 # barplot with ggplot2
 library(ggplot2)
@@ -732,8 +736,8 @@ forms_data %>%
 #conflicts <- fromJSON(file = "~/Master thesis/Data/ejatlas.json")
 
 # get all elements of list in list
-conflicts %>%
-  map("ConflictOutcome")
+#conflicts %>%
+  #map("ConflictOutcome")
 
 # count and arrange in descending order
 plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "ConflictOutcome"), "["))), desc(freq))
