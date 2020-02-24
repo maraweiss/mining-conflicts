@@ -13,19 +13,14 @@ setwd("~/Master thesis/Data")
 # load ejatlas data from json file
 conflicts <- fromJSON(file = "~/Master thesis/Data/ejatlas.json")
 
-# change data frame
-#conflicts[order(sapply(conflicts, "[[", 1))]
-
 ##################### COUNTRY ############################################
-# load ejatlas data from json file
-#conflicts <- fromJSON(file = "~/Master thesis/Data/ejatlas.json")
-
-# get all elements of list in list
-#conflicts %>%
-  #map("Country")
 
 # count and arrange in descending order
 plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "Country"), "["))), desc(freq))
+
+# remove whitespace
+for(i in seq(1,length(conflicts))){
+     conflicts[[i]]$Country <- sub(" ", "", conflicts[[i]]$Country)}
 
 ############################### ACCURACY OF LOCATION #######################
 
@@ -181,8 +176,25 @@ conflicts[[61]]$SpecificCommodities[2]
 # count again
 plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "SpecificCommodities"), "["))), desc(freq))
 
-# categorization of commodities ?
+# categorization of commodities
+substitutes_commodity2 = list(
+)
 
+# for loop for substitution
+for(i in seq(1,length(conflicts))){
+  if(typeof(conflicts[[i]]$SpecificCommodities)=="list"){
+    print(conflicts[[i]]$SpecificCommodities[1])
+    #conflicts[[i]]$SpecificCommodities = unlist(conflicts[[i]]$SpecificCommodities)
+    conflicts[[i]]$SpecificCommodities = ""
+  }
+  for(j in substitutes_commodity){
+    conflicts[[i]]$SpecificCommodities <- gsub(j[2], j[1], conflicts[[i]]$SpecificCommodities)
+    conflicts[[i]]$SpecificCommodities <- unique(conflicts[[i]]$SpecificCommodities)
+  }
+}
+
+# count again
+plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "SpecificCommodities"), "["))), desc(freq))
 
 ########################## TYPE OF POPULATION #############################
 # load ejatlas data from json file
@@ -225,8 +237,8 @@ plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "ReactionStage"), "["))),
 
 substitutes_reaction = list(
   c("preventive", "PREVENTIVE resistance \\(precautionary phase\\)"),
-  c("in reaction during construction or operation", "In REACTION to the implementation \\(during construction or operation\\)"),
-  c("mobilization for reparations once impacts have been felt", "Mobilization for reparations once impacts have been felt"),
+  c("reaction", "In REACTION to the implementation \\(during construction or operation\\)"),
+  c("reparations", "Mobilization for reparations once impacts have been felt"),
   c("latent", "LATENT \\(no visible resistance\\)"),
   c("unknown", "Unknown")
 )
@@ -702,7 +714,7 @@ for(i in conflicts){
 # count again
 plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "FormsOfMobilization"), "["))), desc(freq))
 
-##### ERROR: hunger strikes and self immolation and self immolation###
+### hunger strike; hunger strike and self immolation -> two categories ###
 
 # Figure FormsOfMobilization
 
