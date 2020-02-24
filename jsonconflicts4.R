@@ -75,6 +75,7 @@ substitutes_commodity = list(
   c("antimony", "antimonio"),
   c("antimony", "antimonium"),
   c("antimony", "antimony."),
+  c("aluminium/bauxite", "aluminum/bauxite"),
   c("ferroginous_clay", "arcilla ferruginosa"),
   c("clay", "arcilla"),
   c("limestone", "caliza"),

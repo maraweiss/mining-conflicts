@@ -30,6 +30,12 @@ dfconflicts <- dfconflicts %>%
 dfconflicts <- cbind(dfconflicts[1:109], mtabulate(dfconflicts$GroupsMobilizing))
 
 # impacts either visible yes/no or potential yes/no
+dfconflicts$EnvironmentalImpactsVisible <- ifelse(dfconflicts$EnvironmentalImpactsVisible == "none", 0, 1)
+dfconflicts$EnvironmentalImpactsPotential <- ifelse(dfconflicts$EnvironmentalImpactsPotential == "none", 0, 1)
+dfconflicts$HealthImpactsVisible <- ifelse(dfconflicts$HealthImpactsVisible == "none", 0, 1)
+dfconflicts$HealthImpactsPotential <- ifelse(dfconflicts$HealthImpactsPotential == "none", 0, 1)
+dfconflicts$SocioeconomicImpactsVisible <- ifelse(dfconflicts$SocioeconomicImpactsVisible == "none", 0, 1)
+dfconflicts$SocioeconomicImpactsPotential <- ifelse(dfconflicts$SocioeconomicImpactsPotential == "none", 0, 1)
 
 # DV as factor
 dfconflicts$EscalationStage <- as.factor(unlist(dfconflicts$EscalationStage))
@@ -40,7 +46,7 @@ library(texreg)
 library(stargazer)
 ?multinom
 
-multinom1 <- multinom(formula = EscalationStage ~ Argentina + Bolivia + Brazil + Chile + Colombia + CostaRica + DominicanRepublic + Ecuador + ElSalvador + Guatemala + Guyana + Honduras + Jamaica + Mexico + Nicaragua + Panama + Peru + PuertoRico + Uruguay + AccuracyOfLocation + Rural + Urban + gold + copper + silver + molybdenum + land + iron_ore + zinc + lead + coal + gravel + water + sand + aluminumbauxite + lithium + nickel + uranium + diamonds + limestone + antimony + cement + coltan + manganese + rare_metals + chemical_products + crude_oil + ferronickel + phosphate + potassium + tourism_services + asbestos + chrome + cobalt + electricity + gemstones + industrial_waste + mercury + niobium + recycled_metals + steel + tantalite + timber + tin + tungsten + vanadium + barite + biological_resources + chrysotile + clay + coke + ferroginous_clay + kaolin + lime + phosphorus + pozzolana + rubber + salt + silica + sodium_borate + stone_materials + tantalum + thorianite + preventive + reaction + reparations + economic_actors + organization + excluded_marginalized, data = dfconflicts )
+multinom1 <- multinom(formula = EscalationStage ~ Argentina + Bolivia + Brazil + Chile + Colombia + CostaRica + DominicanRepublic + Ecuador + ElSalvador + Guatemala + Guyana + Honduras + Jamaica + Mexico + Nicaragua + Panama + Peru + PuertoRico + Uruguay + AccuracyOfLocation + Rural + Urban + gold + copper + silver + molybdenum + land + iron_ore + zinc + lead + coal + gravel + water + sand + aluminumbauxite + lithium + nickel + uranium + diamonds + limestone + antimony + cement + coltan + manganese + rare_metals + chemical_products + crude_oil + ferronickel + phosphate + potassium + tourism_services + asbestos + chrome + cobalt + electricity + gemstones + industrial_waste + mercury + niobium + recycled_metals + steel + tantalite + timber + tin + tungsten + vanadium + barite + biological_resources + chrysotile + clay + coke + ferroginous_clay + kaolin + lime + phosphorus + pozzolana + rubber + salt + silica + sodium_borate + stone_materials + tantalum + thorianite + preventive + reaction + reparations + economic_actors + organization + excluded_marginalized + EnvironmentalImpactsVisible + EnvironmentalImpactsPotential + HealthImpactsVisible + HealthImpactsPotential + SocioeconomicImpactsVisible + SocioeconomicImpactsPotential, data = dfconflicts )
 summary(multinom1)
 screenreg(list(multinom1), custom.model.names = c("A"))
 
