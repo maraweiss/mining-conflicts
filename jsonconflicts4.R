@@ -75,7 +75,7 @@ substitutes_commodity = list(
   c("antimony", "antimonio"),
   c("antimony", "antimonium"),
   c("antimony", "antimony."),
-  c("ferroginous clay", "arcilla ferruginosa"),
+  c("ferroginous_clay", "arcilla ferruginosa"),
   c("clay", "arcilla"),
   c("limestone", "caliza"),
   c("limestone", "calizas"),
@@ -106,10 +106,20 @@ substitutes_commodity = list(
   c("pozzolana", "puzolana"),
   c("coltan", "coltn"),
   c("niobium", "columbita"),
-  c("stone materials", "materiales ptreos"),
+  c("stone_materials", "materiales ptreos"),
   c("ferronickel", "ferro-nickel"),
   c("gravel", "agregados-ridos"),
-  c("gravel", "crushed stone")
+  c("gravel", "crushed stone"),
+  c("iron_ore", "iron ore"),
+  c("chemical_products", "chemical products"),
+  c("crude_oil", "crude oil"),
+  c("rare_metals", "rare metals"),
+  c("tourism_services", "tourism services"),
+  c("industrial_waste", "industrial waste"),
+  c("recycled_metals", "recycled metals"),
+  c("biological_resources", "biological resources"),
+  c("sodium_borate", "sodium borate \\(borax\\)"),
+  c("titanium_ores", "titanium ores")
   
 )
 
@@ -147,6 +157,9 @@ for(i in seq(1,length(conflicts))){
   # split elements by " y "
   conflicts[[i]]$SpecificCommodities <- unlist(strsplit(as.character(conflicts[[i]]$SpecificCommodities), " y "))
   
+  # remove "/"
+  conflicts[[i]]$SpecificCommodities <- sub("/", "", conflicts[[i]]$SpecificCommodities)
+  
 
   # substitute pseudonyms
   for(j in substitutes_commodity){
@@ -161,6 +174,7 @@ for(i in seq(1,length(conflicts))){
 
   
 }
+  
 
 
 # show clean list
@@ -177,24 +191,7 @@ conflicts[[61]]$SpecificCommodities[2]
 plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "SpecificCommodities"), "["))), desc(freq))
 
 # categorization of commodities
-substitutes_commodity2 = list(
-)
 
-# for loop for substitution
-for(i in seq(1,length(conflicts))){
-  if(typeof(conflicts[[i]]$SpecificCommodities)=="list"){
-    print(conflicts[[i]]$SpecificCommodities[1])
-    #conflicts[[i]]$SpecificCommodities = unlist(conflicts[[i]]$SpecificCommodities)
-    conflicts[[i]]$SpecificCommodities = ""
-  }
-  for(j in substitutes_commodity){
-    conflicts[[i]]$SpecificCommodities <- gsub(j[2], j[1], conflicts[[i]]$SpecificCommodities)
-    conflicts[[i]]$SpecificCommodities <- unique(conflicts[[i]]$SpecificCommodities)
-  }
-}
-
-# count again
-plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "SpecificCommodities"), "["))), desc(freq))
 
 ########################## TYPE OF POPULATION #############################
 # load ejatlas data from json file
@@ -209,6 +206,10 @@ plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "TypeOfPopulation"), "[")
 
 # add unknown to empty conflict
 conflicts[[277]]$TypeOfPopulation <- c("Unknown")
+
+# change Semi-Urban to Semiurban
+for(i in seq(1,length(conflicts))){
+  conflicts[[i]]$TypeOfPopulation <- sub("-", "", conflicts[[i]]$TypeOfPopulation)}
 
 # count again
 plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "TypeOfPopulation"), "["))), desc(freq))
@@ -421,29 +422,29 @@ groups_data %>%
 
 # substitute values in list
 substitutes_groups2 = list(
-  c("local people", "neighbours/citizens/communities"),
-  c("local people", "recreational users"),
-  c("local people", "conservationists"),
-  c("local people", "youth"),
-  c("organisation", "local ejos"),
-  c("organisation", "social movements"),
-  c("organisation", "local government/political parties"),
-  c("organisation", "international ejos"),
-  c("organisation", "religious groups"),
-  c("organisation", "trade unions"),
-  c("organisation", "international politics"),
-  c("organisation", "national governmental actors"),
-  c("economic actors", "farmers"),
-  c("economic actors", "local scientists/professionals"),
-  c("economic actors", "artisanal miners"),
-  c("economic actors", "fisher people"),
-  c("economic actors", "industrial workers"),
-  c("economic actors", "pastoralists"),
-  c("economic actors", "landless peasants"),
-  c("economic actors", "informal workers"),
-  c("excluded/marginalized", "indigenous groups or traditional communities"),
-  c("excluded/marginalized", "women"),
-  c("excluded/marginalized", "ethnically/racially discriminated groups")
+  c("local_people", "neighbours/citizens/communities"),
+  c("local_people", "recreational users"),
+  c("local_people", "conservationists"),
+  c("local_people", "youth"),
+  c("organization", "local ejos"),
+  c("organization", "social movements"),
+  c("organization", "local government/political parties"),
+  c("organization", "international ejos"),
+  c("organization", "religious groups"),
+  c("organization", "trade unions"),
+  c("organization", "international politics"),
+  c("organization", "national governmental actors"),
+  c("economic_actors", "farmers"),
+  c("economic_actors", "local scientists/professionals"),
+  c("economic_actors", "artisanal miners"),
+  c("economic_actors", "fisher people"),
+  c("economic_actors", "industrial workers"),
+  c("economic_actors", "pastoralists"),
+  c("economic_actors", "landless peasants"),
+  c("economic_actors", "informal workers"),
+  c("excluded_marginalized", "indigenous groups or traditional communities"),
+  c("excluded_marginalized", "women"),
+  c("excluded_marginalized", "ethnically/racially discriminated groups")
 )
 
 
