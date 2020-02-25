@@ -35,9 +35,9 @@ for(i in seq(1,length(conflicts))){
 plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "AccuracyOfLocation"), "["))), desc(freq))
 
 substitutes_location = list(
-  c("high", "HIGH \\(Local level\\)"),
-  c("medium", "MEDIUM \\(Regional level\\)"),
-  c("low", "LOW \\(Country level\\)")
+  c("local_level", "HIGH \\(Local level\\)"),
+  c("regional_level", "MEDIUM \\(Regional level\\)"),
+  c("country_level", "LOW \\(Country level\\)")
 )
 # create for loop
 for(i in seq(1,length(conflicts))){
