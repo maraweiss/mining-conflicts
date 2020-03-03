@@ -52,3 +52,8 @@ multinom2 <- multinom(formula = EscalationStage ~ Argentina + Bolivia + Brazil +
 # Baseline2: Venezuela, country_level, Semiurban
 
 screenreg(list(multinom2), custom.model.names = c("B"))
+
+multinom3 <- multinom(formula = EscalationStage ~ Argentina + Bolivia + Brazil + Chile + Colombia + CostaRica + DominicanRepublic + Ecuador + ElSalvador + Guatemala + Guyana + Honduras + Jamaica + Mexico + Nicaragua + Panama + Peru + PuertoRico + Uruguay + precious_metals + base_metals + light_metals + technology_elements + ferrous_metals + ferroalloy_metals + agricultural_chemical_minerals + nonmetallic_minerals + land + energy_mineral_resources + water + diamonds + chemical_products+ tourism_services + electricity + gemstones + industrial_waste + recycled_metals + timber + biological_resources + pozzolana + rubber + silica +thorianite + stone_materials + preventive + reaction + reparations + local_people + economic_actors + organization + excluded_marginalized + EnvironmentalImpactsVisible + EnvironmentalImpactsPotential + HealthImpactsVisible + HealthImpactsPotential + SocioeconomicImpactsVisible + SocioeconomicImpactsPotential, data = dfconflicts )
+# Baseline2: Venezuela, country_level, Semiurban
+
+screenreg(list(multinom2), custom.model.names = c("C"))
