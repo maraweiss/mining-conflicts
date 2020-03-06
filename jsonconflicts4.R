@@ -1001,7 +1001,7 @@ outcomes_violent %>%
 outcomes_institutional %>%
   mutate(outcomes = fct_reorder(outcomes, count)) %>%
   ggplot( aes(x=outcomes, y=count)) +
-  geom_bar(stat="identity", fill="dark blue", alpha=.6, width=.4) +
+  geom_bar(stat="identity", fill="dark green", alpha=.6, width=.4) +
   coord_flip() +
   xlab("") +
   theme_bw()
