@@ -16,8 +16,7 @@ substitutes_commodity2 = list(
   c("base_metals", "tin"),
   c("base_metals", "zinc"),
   c("base_metals", "lead"),
-  c("light_metals", "aluminiumbauxite"),
-  c("light_metals", "magnesium"),
+  c("light_metals", "aluminumbauxite"),
   c("light_metals", "titanium_ores"),
   c("technology_elements", "antimony"),
   c("technology_elements", "lithium"),
@@ -33,9 +32,8 @@ substitutes_commodity2 = list(
   c("agricultural_chemical_minerals", "salt"),
   c("agricultural_chemical_minerals", "limestone"),
   c("agricultural_chemical_minerals", "lime"),
-  
-  #c("agricultural_chemical_minerals", "biological resources"),
-  #c("agricultural_chemical_minerals", "chemical resources"),
+  c("agricultural_chemical_minerals", "chemical_products"),
+  c("agricultural_chemical_minerals", "silica"),
   c("nonmetallic_minerals","cement"),
   c("nonmetallic_minerals", "asbestos"),
   c("nonmetallic_minerals", "chrysotile"),
@@ -46,10 +44,17 @@ substitutes_commodity2 = list(
   c("nonmetallic_minerals", "kaolin"),
   c("nonmetallic_minerals", "barite"),
   c("nonmetallic_minerals", "sodium_borate"),
+  c("nonmetallic_minerals", "pozzolana"),
   c("energy_mineral_resources", "coal"),
   c("energy_mineral_resources", "coke"),
   c("energy_mineral_resources", "crude_oil"),
-  c("energy_mineral_resources", "uranium") #etc
+  c("radioactive_ores", "uranium"),
+  c("radioactive_ores", "thorianite"),
+  c("biological_resources", "land"),
+  c("biological_resources", "water"),
+  c("biological_resources", "timber"),
+  c("biological_resources", "rubber")
+
 )
 
 # for loop for substitution
