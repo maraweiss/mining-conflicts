@@ -86,14 +86,5 @@ for(i in seq(1,length(conflicts))){
 # count
 plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "EscalationStage"), "["))), desc(freq))
 
-# change elements with international ejos as mobilizing group to be stage 8 ?
-conflicts[[46]]$EscalationStage <- 8
-conflicts[[55]]$EscalationStage <- 8
-conflicts[[98]]$EscalationStage <- 8
-conflicts[[131]]$EscalationStage <- 8
-conflicts[[132]]$EscalationStage <- 8
-conflicts[[157]]$EscalationStage <- 8
-conflicts[[204]]$EscalationStage <- 8
-conflicts[[254]]$EscalationStage <- 8
-conflicts[[267]]$EscalationStage <- 8
+
 
