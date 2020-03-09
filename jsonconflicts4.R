@@ -216,12 +216,14 @@ for(i in seq(1,length(conflicts))){
 plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "TypeOfPopulation"), "["))), desc(freq))
 
 
-############################ COMPANY ORIGIN ###############################
+######################## COMPANY ORIGIN and ILLEGAL MINING #######
 
 # load ejatlas data from json file
 #conflicts <- fromJSON(file = "~/Master thesis/Data/ejatlas.json")
 
-# create for loop to define origin of company/illegal mining 
+# create for loop to define origin of company/illegal mining ("Mineria ilegal" )
+conflicts %>%
+  map("CompanyNames")
 
 
 
