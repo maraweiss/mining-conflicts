@@ -234,11 +234,16 @@ for(i in seq(1,length(conflicts))){
   if (!is.null(conflicts[[i]]$CompanyNames)) {
     companies = conflicts[[i]]$CompanyNames
     if(length(companies) > 0){
+      for (j in seq(1, length(companies))){
+        if(grepl("\\b(\\w*ilegal\\w*)\\b", companies[j])){
+          conflicts[[i]]$CompanyNames[j] = "illegal"
+        }
+        else if (grepl("\\b(\\w*illegal\\w*)\\b", companies[j])){
+          conflicts[[i]]$CompanyNames[j] = "illegal"
+        }
+      }
       countries = sapply(strsplit(companies," from "), `[`, 2)
       for (j in seq(1, length(companies))){
-        if(grepl("illegal", countries[j])){
-          print(countries[j])
-        }
         if(!is.na(countries[j])){
           conflicts[[i]]$CompanyNames[j] = countries[j]
         }
