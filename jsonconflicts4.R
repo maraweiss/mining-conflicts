@@ -7,6 +7,7 @@ library(plyr)
 library(stringr)
 library(tidyverse)
 library(purrr)
+library(readr)
 
 # set working directory
 if (dir.exists("~/Master thesis/Data")){
@@ -29,105 +30,31 @@ for(i in seq(1,length(conflicts))){
 
 ############################### ACCURACY OF LOCATION #######################
 
-# load ejatlas data from json file
-#conflicts <- fromJSON(file = "~/Master thesis/Data/ejatlas.json")
-
-# get all elements of list in list
-#conflicts %>%
- # map("AccuracyOfLocation")
-
 # count and arrange in descending order
 plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "AccuracyOfLocation"), "["))), desc(freq))
 
-substitutes_location = list(
-  c("local_level", "HIGH \\(Local level\\)"),
-  c("regional_level", "MEDIUM \\(Regional level\\)"),
-  c("country_level", "LOW \\(Country level\\)")
-)
-# create for loop
+substitutes_location = read_delim("./substitutes/accuracy_of_location.csv", delim=',', escape_double=FALSE, escape_backslash=TRUE, quote='"')
+
 for(i in seq(1,length(conflicts))){
   if(typeof(conflicts[[i]]$AccuracyOfLocation)=="list"){
     print(conflicts[[i]]$AccuracyOfLocation[1])
-    #conflicts[[i]]$SpecificCommodities = unlist(conflicts[[i]]$SpecificCommodities)
     conflicts[[i]]$AccuracyOfLocation = ""
   }
-
-  # substitute pseudonyms
-  for(j in substitutes_location){
-    conflicts[[i]]$AccuracyOfLocation= gsub(j[2], j[1], conflicts[[i]]$AccuracyOfLocation)
-
+  for(j in seq(nrow(substitutes_location))){
+    conflicts[[i]]$AccuracyOfLocation= gsub(toString(substitutes_location[j,]$old), toString(substitutes_location[j,]$new), conflicts[[i]]$AccuracyOfLocation)
   }
 }
+
 # count again
 plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "AccuracyOfLocation"), "["))), desc(freq))
 
-
 ############################## COMMODITY ###################################
-# load ejatlas data from json file
-#conflicts <- fromJSON(file = "~/Master thesis/Data/ejatlas.json")
-
-# get all elements of list in list
-#conflicts %>%
-  #map("SpecificCommodities")
 
 # count and arrange in descending order
 plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "SpecificCommodities"), "["))), desc(freq))
 
 # substitute values in list
-substitutes_commodity = list(
-  c("molybdenum", "molibdeno"),
-  c("molybdenum", "concentrado de molybdenum"),
-  c("antimony", "antimonio"),
-  c("antimony", "antimonium"),
-  c("antimony", "antimony."),
-  c("aluminium/bauxite", "aluminum/bauxite"),
-  c("ferroginous_clay", "arcilla ferruginosa"),
-  c("clay", "arcilla"),
-  c("limestone", "caliza"),
-  c("limestone", "calizas"),
-  c("limestone", "limestones"),
-  c("tungsten", "tungsteno"),
-  c("tungsten", "tugsteno."),
-  c("sand","arenas"),
-  c("barite", "barita"),
-  c("tantalite","tantalita"),
-  c("chrysotile", "crisotila \\(white amianto\\),"),
-  c("chrysotile", "crisotila"),
-  c("cement", "fabricacin de cemento"),
-  c("gravel", "grava, material de construccin"),
-  c("gravel", "gravas, material de construccin"),
-  c("gravel", "gravas"),
-  c("gravel", "grava"),
-  c("gravel", "material de construccin"),
-  c("gemstones", "emerald"),
-  c("gemstones", "other gems."),
-  c("gemstones", "jade"),
-  c("kaolin", "also known as china clay"),
-  c("phosphate", "phosphates"),
-  c("potassium", "potasio \\(potash\\)"),
-  c("potassium", "potash"),
-  c("thorianite", "torianite"),
-  c("vanadium", "vanadio"),
-  c("tin", "estao \\(tin\\)"),
-  c("pozzolana", "puzolana"),
-  c("coltan", "coltn"),
-  c("niobium", "columbita"),
-  c("stone_materials", "materiales ptreos"),
-  c("ferronickel", "ferro-nickel"),
-  c("gravel", "agregados-ridos"),
-  c("gravel", "crushed stone"),
-  c("iron_ore", "iron ore"),
-  c("chemical_products", "chemical products"),
-  c("crude_oil", "crude oil"),
-  c("rare_metals", "rare metals"),
-  c("tourism_services", "tourism services"),
-  c("industrial_waste", "industrial waste"),
-  c("recycled_metals", "recycled metals"),
-  c("biological_resources", "biological resources"),
-  c("sodium_borate", "sodium borate \\(borax\\)"),
-  c("titanium_ores", "titanium ores")
-
-)
+substitutes_commodity = read_delim("./substitutes/commodities.csv", delim=';', escape_double=FALSE, escape_backslash=TRUE, quote='"')
 
 remove_commodity = c("colimdeno")
 
@@ -167,21 +94,15 @@ for(i in seq(1,length(conflicts))){
   conflicts[[i]]$SpecificCommodities <- sub("/", "", conflicts[[i]]$SpecificCommodities)
 
 
-  # substitute pseudonyms
-  for(j in substitutes_commodity){
-    conflicts[[i]]$SpecificCommodities <- gsub(j[2], j[1], conflicts[[i]]$SpecificCommodities)
+  for(j in seq(nrow(substitutes_commodity))){
+    conflicts[[i]]$SpecificCommodities = gsub(toString(substitutes_commodity[j,]$old), toString(substitutes_commodity[j,]$new), conflicts[[i]]$SpecificCommodities)
     conflicts[[i]]$SpecificCommodities <- unique(conflicts[[i]]$SpecificCommodities)
   }
 
   for(j in remove_commodity){
     conflicts[[i]]$SpecificCommodities = conflicts[[i]]$SpecificCommodities[conflicts[[i]]$SpecificCommodities != j]
-
   }
-
-
 }
-
-
 
 # show clean list
 for(i in conflicts){
@@ -192,7 +113,6 @@ for(i in conflicts){
 conflicts[[61]]$SpecificCommodities[2] <- "lime"
 conflicts[[61]]$SpecificCommodities[2]
 
-
 # count again
 plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "SpecificCommodities"), "["))), desc(freq))
 
@@ -200,12 +120,6 @@ plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "SpecificCommodities"), "
 
 
 ########################## TYPE OF POPULATION #############################
-# load ejatlas data from json file
-#conflicts <- fromJSON(file = "~/Master thesis/Data/ejatlas.json")
-
-# get all elements of list in list
-#conflicts %>%
-  #map("TypeOfPopulation")
 
 # count and arrange in descending order
 plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "TypeOfPopulation"), "["))), desc(freq))
@@ -222,9 +136,6 @@ plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "TypeOfPopulation"), "[")
 
 
 ######################## COMPANY ORIGIN and ILLEGAL MINING #######
-
-# load ejatlas data from json file
-#conflicts <- fromJSON(file = "~/Master thesis/Data/ejatlas.json")
 
 # create for loop to define origin of company/illegal mining ("Mineria ilegal" )
 conflicts %>%
@@ -248,31 +159,29 @@ for(i in seq(1,length(conflicts))){
           conflicts[[i]]$CompanyNames[j] = countries[j]
         }
       }
+      if (all(unique(conflicts[[i]]$CompanyNames) == conflicts[[i]]$Country)){
+        conflicts[[i]]$CompanyNames = "local"
+      }
+      else{
+        if ('illegal' %in% conflicts[[i]]$CompanyNames){
+          conflicts[[i]]$CompanyNames = "illegal"
+        }
+        else{
+          conflicts[[i]]$CompanyNames = "foreign"
+        }
+      }
     }
   }
 }
 
-
+conflicts[[i]]$Country
 
 ################################ REACTION STAGE #############################
 
-# load ejatlas data from json file
-#conflicts <- fromJSON(file = "~/Master thesis/Data/ejatlas.json")
-
-# get all elements of list in list
-#conflicts %>%
-  #map("ReactionStage")
-
 # count and arrange in descending order
 plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "ReactionStage"), "["))), desc(freq))
+substitutes_reaction = read_delim("./substitutes/reaction.csv", delim=';', escape_double=FALSE, escape_backslash=TRUE, quote='"')
 
-substitutes_reaction = list(
-  c("preventive", "PREVENTIVE resistance \\(precautionary phase\\)"),
-  c("reaction", "In REACTION to the implementation \\(during construction or operation\\)"),
-  c("reparations", "Mobilization for reparations once impacts have been felt"),
-  c("latent", "LATENT \\(no visible resistance\\)"),
-  c("unknown", "Unknown")
-)
 # create for loop
 for(i in seq(1,length(conflicts))){
   if(typeof(conflicts[[i]]$ReactionStage)=="list"){
@@ -282,9 +191,8 @@ for(i in seq(1,length(conflicts))){
   }
 
   # substitute pseudonyms
-  for(j in substitutes_reaction){
-    conflicts[[i]]$ReactionStage= gsub(j[2], j[1], conflicts[[i]]$ReactionStage)
-
+  for(j in seq(nrow(substitutes_reaction))){
+    conflicts[[i]]$ReactionStage <- gsub(toString(substitutes_reaction[j,]$old), toString(substitutes_reaction[j,]$new), conflicts[[i]]$ReactionStage)
   }
 }
 
