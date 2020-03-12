@@ -260,40 +260,35 @@ plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "GroupsMobilizing"), "[")
 # create substitute values
 substitutes_groups = read_delim("./substitutes/groups.csv", delim=';', escape_double=FALSE, escape_backslash=TRUE, quote='"')
 
+# remove empty elements
 remove_groups = c("")
 
 # add elements
-conflicts[[120]]$GroupsMobilizing <- c("neighbours/citizens/communities", "local government/political parties", "local ejos") # decoin (local ejo), citizens, local government/political parties @intag mining, junin, ecuador
-
+conflicts[[120]]$GroupsMobilizing <- c("neighbours/citizens/communities", "local government/political parties", "local ejos")
 conflicts[[242]]$GroupsMobilizing <- c("neighbours/citizens/communities", "local ejos")
-
 
 # create for loop
 for(i in seq(1,length(conflicts))){
   if(typeof(conflicts[[i]]$GroupsMobilizing)=="list"){
     print(conflicts[[i]]$GroupsMobilizing[1])
-    #conflicts[[i]]$SpecificCommodities = unlist(conflicts[[i]]$SpecificCommodities)
     conflicts[[i]]$GroupsMobilizing = ""
   }
   # remove whitespace
   conflicts[[i]]$GroupsMobilizing = trimws(conflicts[[i]]$GroupsMobilizing, which = c("both"))
-
+  
   # lowercase all
   conflicts[[i]]$GroupsMobilizing = unlist(lapply(conflicts[[i]]$GroupsMobilizing, tolower))
-
+  
   # split elements separated by "\n"
   conflicts[[i]]$GroupsMobilizing <- unlist(strsplit(as.character(conflicts[[i]]$GroupsMobilizing), "\n" ))
-
-
-
+  
   # substitute pseudonyms
-  for(j in substitutes_groups){
-    conflicts[[i]]$GroupsMobilizing = gsub(j[2], j[1], conflicts[[i]]$GroupsMobilizing)
-    conflicts[[i]]$GroupsMobilizing <- unique(conflicts[[i]]$GroupsMobilizing)
+  for(j in seq(nrow(substitutes_groups))){
+    conflicts[[i]]$GroupsMobilizing <- gsub(toString(substitutes_groups[j,]$old), toString(substitutes_groups[j,]$new), conflicts[[i]]$GroupsMobilizing)
   }
   for(j in remove_groups){
     conflicts[[i]]$GroupsMobilizing = conflicts[[i]]$GroupsMobilizing[conflicts[[i]]$GroupsMobilizing != j]
-
+    
   }
   conflicts[[i]]$GroupsMobilizing = gsub(".","", conflicts[[i]]$GroupsMobilizing, fixed = TRUE) #to not get "." in results
 }
@@ -307,6 +302,8 @@ for(i in conflicts){
 
 # count again
 plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "GroupsMobilizing"), "["))), desc(freq))
+
+##### ERROR with quotes inside strings #####
 
 
 # Figure Mobilizing Groups
