@@ -293,18 +293,13 @@ for(i in seq(1,length(conflicts))){
   conflicts[[i]]$GroupsMobilizing = gsub(".","", conflicts[[i]]$GroupsMobilizing, fixed = TRUE) #to not get "." in results
 }
 
-
 # show clean list
-for(i in conflicts){
-  print(i$GroupsMobilizing)
-}
-
+# for(i in conflicts){
+#  print(i$GroupsMobilizing)
+# }
 
 # count again
 plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "GroupsMobilizing"), "["))), desc(freq))
-
-##### ERROR with quotes inside strings #####
-
 
 # Figure Mobilizing Groups
 
@@ -326,15 +321,34 @@ groups_data %>%
   xlab("") +
   theme_bw()
 
-
 # categorization of groups
-# 1 Local people
-## 2 Organization
-### 3 Economic actor
-#### 5 Excluded/marginalized
 
-# create substitute values
-substitutes_groups2 = read_delim("./substitutes/groups_categorization.csv", delim=';', escape_double=FALSE, escape_backslash=TRUE, quote='"')
+# substitute values in list
+substitutes_groups2 = list(
+  c("local people", "neighbours/citizens/communities"),
+  c("local people", "recreational users"),
+  c("local people", "conservationists"),
+  c("local people", "youth"),
+  c("organisation", "local ejos"),
+  c("organisation", "social movements"),
+  c("organisation", "local government/political parties"),
+  c("organisation", "international ejos"),
+  c("organisation", "religious groups"),
+  c("organisation", "trade unions"),
+  c("organisation", "international politics"),
+  c("organisation", "national governmental actors"),
+  c("economic actors", "farmers"),
+  c("economic actors", "local scientists/professionals"),
+  c("economic actors", "artisanal miners"),
+  c("economic actors", "fisher people"),
+  c("economic actors", "industrial workers"),
+  c("economic actors", "pastoralists"),
+  c("economic actors", "landless peasants"),
+  c("economic actors", "informal workers"),
+  c("excluded/marginalized", "indigenous groups or traditional communities"),
+  c("excluded/marginalized", "women"),
+  c("excluded/marginalized", "ethnically/racially discriminated groups")
+)
 
 # create for loop
 for(i in seq(1,length(conflicts))){
@@ -342,16 +356,13 @@ for(i in seq(1,length(conflicts))){
     print(conflicts[[i]]$GroupsMobilizing[1])
     conflicts[[i]]$GroupsMobilizing = ""
   }
+  
   # substitute pseudonyms
-  for(j in seq(nrow(substitutes_groups))){
-    conflicts[[i]]$GroupsMobilizing <- gsub(toString(substitutes_groups[j,]$old), toString(substitutes_groups[j,]$new), conflicts[[i]]$GroupsMobilizing)
+  for(j in substitutes_groups2){
+    conflicts[[i]]$GroupsMobilizing = gsub(j[2], j[1], conflicts[[i]]$GroupsMobilizing)
+    conflicts[[i]]$GroupsMobilizing <- unique(conflicts[[i]]$GroupsMobilizing)
   }
   conflicts[[i]]$GroupsMobilizing = gsub(".","", conflicts[[i]]$GroupsMobilizing, fixed = TRUE) #to not get "." in results
-}
-
-# show clean list
-for(i in conflicts){
-  print(i$GroupsMobilizing)
 }
 
 # count again
@@ -359,13 +370,15 @@ plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "GroupsMobilizing"), "[")
 
 # as table
 
+## ERROR with using groups_categorization.csv file for substitution ##
+
 ######################### FORMS OF MOBILIZATION ############################
 
 # count and arrange in descending order
 plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "FormsOfMobilization"), "["))), desc(freq))
 
 # create substitute values
-substitutes_forms = read_delim("./substitutes/forms.csv", delim=';', escape_double=FALSE, escape_backslash=TRUE, quote='"')
+substitutes_forms = read_delim("./substitutes/forms.csv", delim=';', escape_double=FALSE, escape_backslash=TRUE, quote='')
 
 #remove elements
 remove_forms = c(
@@ -414,10 +427,9 @@ remove_forms = c(
 
 # add elements
 conflicts[[120]]$FormsOfMobilization <- c("property damage/arson", "blockades", "street protest/marches")
-
-conflicts[[242]]$FormsOfMobilization <- c("street protest/marches")
-
 conflicts[[151]]$FormsOfMobilization <- c("blockades", "development of a network/collective action","involvement of national and international ngos", "lawsuits, court cases, judicial activism","media based activism/alternative media", "objections to the eia", "official complaint letters and petitions", "public campaigns","street protest/marches", "hunger strikes and self immolation", "shareholder/financial activism")
+conflicts[[157]]$FormsOfMobilization <- c("blockades", "official complaint letters and petitions", "street protest/marches", "hunger strikes and self immolation", "arguments for the rights of mother nature") # in appendix
+conflicts[[242]]$FormsOfMobilization <- c("street protest/marches")
 
 # create for loop
 for(i in seq(1,length(conflicts))){
@@ -437,23 +449,22 @@ for(i in seq(1,length(conflicts))){
   # substitute pseudonyms
   for(j in seq(nrow(substitutes_forms))){
     conflicts[[i]]$FormsOfMobilization <- gsub(toString(substitutes_forms[j,]$old), toString(substitutes_forms[j,]$new), conflicts[[i]]$FormsOfMobilization)
+    conflicts[[i]]$FormsOfMobilization <- unique(conflicts[[i]]$FormsOfMobilization)
   }
   for(j in remove_forms){
     conflicts[[i]]$FormsOfMobilization = conflicts[[i]]$FormsOfMobilization[conflicts[[i]]$FormsOfMobilization != j]
     
   }
-  conflicts[[i]]$FormsOfMobilization = gsub(".","", conflicts[[i]]$FormsOfMobilization, fixed = TRUE) #to not get "." in results
+   conflicts[[i]]$FormsOfMobilization = gsub(".","", conflicts[[i]]$FormsOfMobilization, fixed = TRUE) #to not get "." in results
 }
 
-# show clean list
-for(i in conflicts){
-  print(i$FormsOfMobilization)
-}
+# # show clean list
+# for(i in conflicts){
+#   print(i$FormsOfMobilization)
+# }
 
 # count again
 plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "FormsOfMobilization"), "["))), desc(freq))
-
-### hunger strike; hunger strike and self immolation -> two categories ###
 
 # Figure FormsOfMobilization
 
@@ -463,9 +474,9 @@ forms_data <- plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "FormsOfMob
 forms_data <- forms_data %>%
   dplyr::select(forms_of_mobilization = x, count = freq)
 
-# filter > 1
-#forms_data <- forms_data %>%
- # filter(count > 1)
+#filter > 10
+forms_data <- forms_data %>%
+  dplyr::filter(count > 10)
 
 # barplot with ggplot2
 library(ggplot2)
