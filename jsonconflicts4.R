@@ -258,7 +258,7 @@ plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "ReactionStage"), "["))),
 plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "GroupsMobilizing"), "["))), desc(freq))
 
 # create substitute values
-substitutes_groups = read_delim("./substitutes/groups.csv", delim=';', escape_double=FALSE, escape_backslash=TRUE, quote='"')
+substitutes_groups = read_delim("./substitutes/groups.csv", delim=';', escape_double=FALSE, escape_backslash=TRUE, quote='')
 
 # remove empty elements
 remove_groups = c("")
