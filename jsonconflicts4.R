@@ -10,8 +10,8 @@ library(purrr)
 library(readr)
 
 # set working directory
-if (dir.exists("~/Master thesis/Data")){
-  setwd("~/Master thesis/Data")
+if (dir.exists("~/Master thesis/Code/mining-conflicts")){
+  setwd("~/Master thesis/Code/mining-conflicts")
 } else{
   setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 }
@@ -26,123 +26,76 @@ plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "Country"), "["))), desc(
 
 # remove whitespace
 for(i in seq(1,length(conflicts))){
-     conflicts[[i]]$Country <- sub(" ", "", conflicts[[i]]$Country)}
+     conflicts[[i]]$Country <- sub(" ", "", conflicts[[i]]$Country)
 
-############################### ACCURACY OF LOCATION #######################
-
-# count and arrange in descending order
-plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "AccuracyOfLocation"), "["))), desc(freq))
-
-substitutes_location = read_delim("./substitutes/accuracy_of_location.csv", delim=',', escape_double=FALSE, escape_backslash=TRUE, quote='"')
-
-for(i in seq(1,length(conflicts))){
-  if(typeof(conflicts[[i]]$AccuracyOfLocation)=="list"){
-    print(conflicts[[i]]$AccuracyOfLocation[1])
-    conflicts[[i]]$AccuracyOfLocation = ""
-  }
-  for(j in seq(nrow(substitutes_location))){
-    conflicts[[i]]$AccuracyOfLocation= gsub(toString(substitutes_location[j,]$old), toString(substitutes_location[j,]$new), conflicts[[i]]$AccuracyOfLocation)
-  }
+# lowercase all
+conflicts[[i]]$Country <- unlist(lapply(conflicts[[i]]$Country, tolower))
 }
 
-# count again
-plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "AccuracyOfLocation"), "["))), desc(freq))
-
-############################## COMMODITY ###################################
-
-# count and arrange in descending order
-plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "SpecificCommodities"), "["))), desc(freq))
-
-# substitute values in list
-substitutes_commodity = read_delim("./substitutes/commodities.csv", delim=';', escape_double=FALSE, escape_backslash=TRUE, quote='"')
-
-remove_commodity = c("colimdeno")
-
-# add elements
-conflicts[[120]]$SpecificCommodities <- c("copper")
-conflicts[[242]]$SpecificCommodities <- c("copper")
-
-# create for loop
-for(i in seq(1,length(conflicts))){
-  if(typeof(conflicts[[i]]$SpecificCommodities)=="list"){
-    print(conflicts[[i]]$SpecificCommodities[1])
-    #conflicts[[i]]$SpecificCommodities = unlist(conflicts[[i]]$SpecificCommodities)
-    conflicts[[i]]$SpecificCommodities = ""
-  }
-  # remove whitespace
-  conflicts[[i]]$SpecificCommodities <- trimws(conflicts[[i]]$SpecificCommodities, which = c("both"))
-
-  # lowercase all
-  conflicts[[i]]$SpecificCommodities <- unlist(lapply(conflicts[[i]]$SpecificCommodities, tolower))
-
-  # split elements separated by ", "
-  conflicts[[i]]$SpecificCommodities <- unlist(strsplit(as.character(conflicts[[i]]$SpecificCommodities), ", "))
-
-  # split elements separated by " and "
-  conflicts[[i]]$SpecificCommodities <- unlist(strsplit(as.character(conflicts[[i]]$SpecificCommodities), " and "))
-
-  # split elements separated by "\n"
-  conflicts[[i]]$SpecificCommodities <- unlist(strsplit(as.character(conflicts[[i]]$SpecificCommodities), " \n" ))
-
-  # split elements by " - "
-  conflicts[[i]]$SpecificCommodities <- unlist(strsplit(as.character(conflicts[[i]]$SpecificCommodities), " - " ))
-
-  # split elements by " y "
-  conflicts[[i]]$SpecificCommodities <- unlist(strsplit(as.character(conflicts[[i]]$SpecificCommodities), " y "))
-
-  # remove "/"
-  conflicts[[i]]$SpecificCommodities <- sub("/", "", conflicts[[i]]$SpecificCommodities)
 
 
-  for(j in seq(nrow(substitutes_commodity))){
-    conflicts[[i]]$SpecificCommodities = gsub(toString(substitutes_commodity[j,]$old), toString(substitutes_commodity[j,]$new), conflicts[[i]]$SpecificCommodities)
-    conflicts[[i]]$SpecificCommodities <- unique(conflicts[[i]]$SpecificCommodities)
-  }
+######################## COMPANY ORIGIN and ILLEGAL MINING ################
 
-  for(j in remove_commodity){
-    conflicts[[i]]$SpecificCommodities = conflicts[[i]]$SpecificCommodities[conflicts[[i]]$SpecificCommodities != j]
-  }
-}
-
-# show clean list
-for(i in conflicts){
-  print(i$SpecificCommodities)
-}
-
-# change 'cal' to 'lime'
-conflicts[[61]]$SpecificCommodities[2] <- "lime"
-conflicts[[61]]$SpecificCommodities[2]
-
-# count again
-plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "SpecificCommodities"), "["))), desc(freq))
-
-# categorization of commodities
-
-
-########################## TYPE OF POPULATION #############################
-
-# count and arrange in descending order
-plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "TypeOfPopulation"), "["))), desc(freq))
-
-# add unknown to empty conflict
-conflicts[[277]]$TypeOfPopulation <- c("Unknown")
-
-# change Semi-Urban to Semiurban
-for(i in seq(1,length(conflicts))){
-  conflicts[[i]]$TypeOfPopulation <- sub("-", "", conflicts[[i]]$TypeOfPopulation)}
-
-# count again
-plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "TypeOfPopulation"), "["))), desc(freq))
-
-
-######################## COMPANY ORIGIN and ILLEGAL MINING #######
-
-# create for loop to define origin of company/illegal mining ("Mineria ilegal" )
+# get all companynames
 conflicts %>%
   map("CompanyNames")
-
+  
+# manually complete information for cases without company names or companies without info on origin
+  conflicts[[4]]$CompanyNames <- c("illegal")
+  conflicts[[6]]$CompanyNames <- c("illegal")
+  conflicts[[42]]$CompanyNames <- c("illegal")
+  conflicts[[46]]$CompanyNames <- c("illegal")
+  conflicts[[58]]$CompanyNames <- c("illegal")
+  conflicts[[59]]$CompanyNames <- c("illegal")
+  conflicts[[79]]$CompanyNames <- c("illegal")
+  conflicts[[114]]$CompanyNames <- c("illegal")
+  conflicts[[117]]$CompanyNames <- c("illegal")
+  conflicts[[118]]$CompanyNames <- c("illegal")
+  conflicts[[156]]$CompanyNames <- c("illegal")
+  conflicts[[181]]$CompanyNames <- c("illegal")
+  conflicts[[183]]$CompanyNames <- c("illegal")
+  conflicts[[185]]$CompanyNames <- c("illegal")
+  conflicts[[187]]$CompanyNames <- c("illegal")
+  conflicts[[189]]$CompanyNames <- c("illegal")
+  conflicts[[231]]$CompanyNames <- c("illegal")
+  conflicts[[245]]$CompanyNames <- c("illegal")
+  conflicts[[282]]$CompanyNames <- c("illegal")
+  
+  conflicts[[27]]$CompanyNames <- c("Sundance Minerals Ltd. Of Vancouver from Canada")
+  conflicts[[33]]$CompanyNames <- c("United States")
+  conflicts[[37]]$CompanyNames <- c("Volcan Compaa Minera from Peru")
+  conflicts[[45]]$CompanyNames <- c("Teck Resources Limited from Candada")
+  conflicts[[47]]$CompanyNames <- c("BlackFire from Canada")
+  conflicts[[49]]$CompanyNames <- c("Minas Buenaventura from Peru")
+  conflicts[[50]]$CompanyNames <- c("Hochschild Mining from Peru") 
+  conflicts[[71]]$CompanyNames <- c("Union Mining from The Netherlands")
+  conflicts[[83]]$CompanyNames <- c("Drummond Company Inc. from United States")
+  conflicts[[87]]$CompanyNames <- c("Bolivia")
+  conflicts[[91]]$CompanyNames <- c("Codelco from Chile")
+  conflicts[[95]]$CompanyNames <- c("Colombia")
+  conflicts[[108]]$CompanyNames <- c("South World Consulting from Chile")
+  conflicts[[121]]$CompanyNames <- c("Carbozulia from Venezuela")
+  conflicts[[137]]$CompanyNames <- c("Manto Rojo from Mexico")
+  conflicts[[166]]$CompanyNames <- c("Alexander Mining Plc. from United Kingdom")
+  conflicts[[194]]$CompanyNames <- c("Dominium Minerals Corp. from United States")
+  conflicts[[215]]$CompanyNames <- c("Coer dAlene Mines from United States")
+  conflicts[[216]]$CompanyNames <- c("Mexico")
+  conflicts[[244]]$CompanyNames <- c("Brazil")
+  conflicts[[259]]$CompanyNames <- c("Caribbean Resources Group Corporation from Guatemala")
+  conflicts[[268]]$CompanyNames <- c("Argentina")
+  conflicts[[269]]$CompanyNames <- c("Argentina")
+  conflicts[[270]]$CompanyNames <- c("Canada")
+  conflicts[[291]]$CompanyNames <- c("Bolivia")
+  
+  
+  
+# all companynames with term "illegal"/"ilegal" inside the strings (e.g. Mineria ilegal) are renamed as "illegal" 
 for(i in seq(1,length(conflicts))){
-  if (!is.null(conflicts[[i]]$CompanyNames)) {
+  # remove whitespace
+  conflicts[[i]]$CompanyNames = gsub(" ", "", conflicts[[i]]$CompanyNames)
+  # lowercase all
+  conflicts[[i]]$CompanyNames = unlist(lapply(conflicts[[i]]$CompanyNames, tolower))
+   if (!is.null(conflicts[[i]]$CompanyNames)) {
     companies = conflicts[[i]]$CompanyNames
     if(length(companies) > 0){
       for (j in seq(1, length(companies))){
@@ -153,7 +106,8 @@ for(i in seq(1,length(conflicts))){
           conflicts[[i]]$CompanyNames[j] = "illegal"
         }
       }
-      countries = sapply(strsplit(companies," from "), `[`, 2)
+      # all companynames with "from Country XY" are renamed as the country
+      countries = sapply(strsplit(companies,"from"), `[`, 2)
       for (j in seq(1, length(companies))){
         if(!is.na(countries[j])){
           conflicts[[i]]$CompanyNames[j] = countries[j]
@@ -172,21 +126,116 @@ for(i in seq(1,length(conflicts))){
       }
     }
   }
-}
+} 
+  
+  # now all conflicts in which CompanyNames equals Country are "local", when the term illegal/ilegal shows up, they are "illegal", else they are "foreign"
+  plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "CompanyNames"), "["))), desc(freq))
+  
+  
 
-conflicts[[i]]$Country
+  ############################## COMMODITY ###################################
+  
+  # count and arrange in descending order
+  plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "SpecificCommodities"), "["))), desc(freq))
+  
+  # substitute values in list
+  substitutes_commodity = read_delim("./substitutes/commodities.csv", delim=';', escape_double=FALSE, escape_backslash=TRUE, quote='"')
+  
+  # remove values
+  remove_commodity = c("colimdeno")
+  
+  # add elements
+  conflicts[[120]]$SpecificCommodities <- c("copper")
+  conflicts[[242]]$SpecificCommodities <- c("copper")
+  
+  # create for loop
+  for(i in seq(1,length(conflicts))){
+    if(typeof(conflicts[[i]]$SpecificCommodities)=="list"){
+      print(conflicts[[i]]$SpecificCommodities[1])
+      #conflicts[[i]]$SpecificCommodities = unlist(conflicts[[i]]$SpecificCommodities)
+      conflicts[[i]]$SpecificCommodities = ""
+    }
+    # remove whitespace
+    conflicts[[i]]$SpecificCommodities <- trimws(conflicts[[i]]$SpecificCommodities, which = c("both"))
+    
+    # lowercase all
+    conflicts[[i]]$SpecificCommodities <- unlist(lapply(conflicts[[i]]$SpecificCommodities, tolower))
+    
+    # split elements separated by ", "
+    conflicts[[i]]$SpecificCommodities <- unlist(strsplit(as.character(conflicts[[i]]$SpecificCommodities), ", "))
+    
+    # split elements separated by " and "
+    conflicts[[i]]$SpecificCommodities <- unlist(strsplit(as.character(conflicts[[i]]$SpecificCommodities), " and "))
+    
+    # split elements separated by "\n"
+    conflicts[[i]]$SpecificCommodities <- unlist(strsplit(as.character(conflicts[[i]]$SpecificCommodities), " \n" ))
+    
+    # split elements by " - "
+    conflicts[[i]]$SpecificCommodities <- unlist(strsplit(as.character(conflicts[[i]]$SpecificCommodities), " - " ))
+    
+    # split elements by " y "
+    conflicts[[i]]$SpecificCommodities <- unlist(strsplit(as.character(conflicts[[i]]$SpecificCommodities), " y "))
+    
+    # remove "/"
+    conflicts[[i]]$SpecificCommodities <- sub("/", "", conflicts[[i]]$SpecificCommodities)
+    
+    
+    for(j in seq(nrow(substitutes_commodity))){
+      conflicts[[i]]$SpecificCommodities = gsub(toString(substitutes_commodity[j,]$old), toString(substitutes_commodity[j,]$new), conflicts[[i]]$SpecificCommodities)
+      conflicts[[i]]$SpecificCommodities <- unique(conflicts[[i]]$SpecificCommodities)
+    }
+    
+    for(j in remove_commodity){
+      conflicts[[i]]$SpecificCommodities = conflicts[[i]]$SpecificCommodities[conflicts[[i]]$SpecificCommodities != j]
+    }
+  }
+  
+  # show clean list
+  for(i in conflicts){
+    print(i$SpecificCommodities)
+  }
+  
+  # change 'cal' to 'lime'
+  conflicts[[61]]$SpecificCommodities[2] <- "lime"
+  conflicts[[61]]$SpecificCommodities[2]
+  
+  # count again
+  plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "SpecificCommodities"), "["))), desc(freq))
+  
+  # categorization of commodities
+  
+  # substitute values in list
+  substitutes_commodity2 = read_delim("./substitutes/commodities_categorization.csv", delim=';', escape_double=FALSE, escape_backslash=TRUE, quote='"')
+  
+  # for loop for substitution
+  for(i in seq(1,length(conflicts))){
+    if(typeof(conflicts[[i]]$SpecificCommodities)=="list"){
+      print(conflicts[[i]]$SpecificCommodities[1])
+      conflicts[[i]]$SpecificCommodities = ""
+    }
+    for(j in seq(nrow(substitutes_commodity2))){
+      conflicts[[i]]$SpecificCommodities = gsub(toString(substitutes_commodity2[j,]$old), toString(substitutes_commodity2[j,]$new), conflicts[[i]]$SpecificCommodities)
+      conflicts[[i]]$SpecificCommodities <- unique(conflicts[[i]]$SpecificCommodities)
+    }
+  }
+  
+  # count again
+  plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "SpecificCommodities"), "["))), desc(freq))
+  
 
-################################ REACTION STAGE #############################
+
+################################ REACTION STAGE ##############################
 
 # count and arrange in descending order
 plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "ReactionStage"), "["))), desc(freq))
+  
+# create substitute values
 substitutes_reaction = read_delim("./substitutes/reaction.csv", delim=';', escape_double=FALSE, escape_backslash=TRUE, quote='"')
 
 # create for loop
 for(i in seq(1,length(conflicts))){
   if(typeof(conflicts[[i]]$ReactionStage)=="list"){
     print(conflicts[[i]]$ReactionStage[1])
-    #conflicts[[i]]$SpecificCommodities = unlist(conflicts[[i]]$SpecificCommodities)
     conflicts[[i]]$ReactionStage = ""
   }
 
@@ -203,84 +252,13 @@ conflicts[[91]]$ReactionStage <- c("unknown")
 plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "ReactionStage"), "["))), desc(freq))
 
 
-############################### MOBILIZING GROUPS ##########################
-
-# load ejatlas data from json file
-#conflicts <- fromJSON(file = "~/Master thesis/Data/ejatlas.json")
-
-# get all elements of list in list
-#conflicts %>%
-  #map("GroupsMobilizing")
+############################### MOBILIZING GROUPS ###########################
 
 # count and arrange in descending order
 plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "GroupsMobilizing"), "["))), desc(freq))
 
-# substitute values in list
-substitutes_groups = list(
-  c("neighbours/citizens/communities", "ronderos"),
-  c("neighbours/citizens/communities", "familiares de los accidentados"),
-  c("neighbours/citizens/communities", "consejos comunales"),
-  c("neighbours/citizens/communities", "consejos educativos"),
-  c("neighbours/citizens/communities", "communal leaders"),
-  c("neighbours/citizens/communities", "cuerpo de bomberos"),
-  c("local ejos", "centro de derechos humanos y ambiente \\(cedha\\)"),
-  c("local ejos", "comite de salud local"),
-  c("local ejos", "movimiento ambiental local"),
-  c("local ejos", "local ejos."),
-  c("farmers", "agricultores"),
-  c("farmers", "as often in the region of cajamarca, the \"rondas campesinas\" \\(peasant local organizations\\) have been active."),
-  c("farmers", "ejidatarios"),
-  c("farmers", "ganaderos, cattle farmers"),
-  c("farmers", "rondas campesinas"),
-  c("indigenous groups or traditional communities", "geraizeiros, traditional communities of the north of minas gerais"),
-  c("indigenous groups or traditional communities", "aymara population"),
-  c("indigenous groups or traditional communities", "aparai, wayana and wajpi indigenous groups"),
-  c("indigenous groups or traditional communities", "comunidad huarpe guaytamari"),
-
-  c("indigenous groups or traditional communities", "comunidades indigenas maya mam"),
-  c("indigenous groups or traditional communities", "comunidades indgenas"),
-  c("indigenous groups or traditional communities", "politicas indgenas locales \\(crescencia prado"),
-  c("indigenous groups or traditional communities", "integrantes de los pueblos indgenas del alto paragua se movilizan y conforman una comunidad a raz del levantamiento de la paragua de 2011 y la ocupacin de la mina tonoro, y fundan la comunidad musuk pa, una comunidad independiente ubicada en el alto paragua y que posee sus propias reglas. destaca el liderazgo de alexis romero, pemn del pueblo taurepn, quien se convierte en el capitn de musuk pa ."),
-  c("indigenous groups or traditional communities", "mapuche-tehuelche"),
-  c("indigenous groups or traditional communities", "mapuche population"),
-  c("indigenous groups or traditional communities", "maroon community"),
-  c("indigenous groups or traditional communities", "mapuche"),
-  c("indigenous groups or traditional communities", "maya mam indigenous communities"),
-  c("indigenous groups or traditional communities", "nahua communities"),
-  c("indigenous groups or traditional communities", "pobladores de origen kolla"),
-  c("indigenous groups or traditional communities", "pueblo maya mam"),
-  c("indigenous groups or traditional communities", "quilombola communities"),
-  c("indigenous groups or traditional communities", "quilombolas and krenak"),
-  c("indigenous groups or traditional communities", "quilombolas"),
-  c("indigenous groups or traditional communities", "xikrin indigenous peoples"),
-  c("indigenous groups or traditional communities", "zoque"),
-  c("indigenous groups or traditional communities", "indigenous tolupanes"),
-  c("social movements", "grupos de derechos humanos"),
-  c("social movements", "human rights networks."),
-  c("social movements", "social movement."),
-  c("social movements", "red de asistencia jurdica contra la megaminera \\(redaj\\)"),
-  c("women", "una mujer, juana payaba cachique, ha sido lideresa shipiba"),
-  c("women", "women activism"),
-  c("ethnically/racially discriminated groups", "comunidades afrodescendientes"),
-  c("trade unions", "sindicato de trabajadores del proyecto minero"),
-  c("trade unions", "articulao internacional dos atingidos e atingidas pela vale. also, iglesias y minera \\[15\\].  also the cut \\[16\\]  and local miners' unions"),
-  c("industrial workers", "miners, mining workers"),
-  c("industrial workers", "trabajadores de la minera"),
-  c("industrial workers", "trabajadores industriales"),
-  c("industrial workers", "ex-workers"),
-  c("recreational users", "residentes norte americanos, turistas y dems extranjeros, cmara de comercio e industria"),
-  c("conservationists", "conservationist organization \\(wwf\\)"),
-  c("conservationists", "conservationist groups"),
-  c("conservationists", "sectores conservacionistas"),
-  c("national governmental actors", "senators \\(parliament\\)"),
-  c("national governmental actors", "governamental inspectors \\(ibama\\)"),
-  c("youth", "estudiantes"),
-  c("youth", "grupos de jvenes, organizaciones de maestros \\(sector educacin\\)"),
-  c("youth", "grupos de jvenes"),
-  c("youth", "youth groups"),
-  c("international politics", "diputados britanicos"),
-  c("international politics", "government of nicaragua \\(neighbouring state\\)")
-)
+# create substitute values
+substitutes_groups = read_delim("./substitutes/groups.csv", delim=';', escape_double=FALSE, escape_backslash=TRUE, quote='"')
 
 remove_groups = c("")
 
