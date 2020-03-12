@@ -2,12 +2,10 @@
 
 # load libraries
 library(rjson)
-library(dplyr)
 library(plyr)
+library(dplyr)
 library(stringr)
 library(tidyverse)
-library(purrr)
-library(readr)
 
 # set working directory
 if (dir.exists("~/Master thesis/Code/mining-conflicts")){
@@ -197,8 +195,7 @@ for(i in seq(1,length(conflicts))){
   
   # change 'cal' to 'lime'
   conflicts[[61]]$SpecificCommodities[2] <- "lime"
-  conflicts[[61]]$SpecificCommodities[2]
-  
+
   # count again
   plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "SpecificCommodities"), "["))), desc(freq))
   
@@ -325,29 +322,29 @@ groups_data %>%
 
 # substitute values in list
 substitutes_groups2 = list(
-  c("local people", "neighbours/citizens/communities"),
-  c("local people", "recreational users"),
-  c("local people", "conservationists"),
-  c("local people", "youth"),
-  c("organisation", "local ejos"),
-  c("organisation", "social movements"),
-  c("organisation", "local government/political parties"),
-  c("organisation", "international ejos"),
-  c("organisation", "religious groups"),
-  c("organisation", "trade unions"),
-  c("organisation", "international politics"),
-  c("organisation", "national governmental actors"),
-  c("economic actors", "farmers"),
-  c("economic actors", "local scientists/professionals"),
-  c("economic actors", "artisanal miners"),
-  c("economic actors", "fisher people"),
-  c("economic actors", "industrial workers"),
-  c("economic actors", "pastoralists"),
-  c("economic actors", "landless peasants"),
-  c("economic actors", "informal workers"),
-  c("excluded/marginalized", "indigenous groups or traditional communities"),
-  c("excluded/marginalized", "women"),
-  c("excluded/marginalized", "ethnically/racially discriminated groups")
+  c("local_people", "neighbours/citizens/communities"),
+  c("local_people", "recreational users"),
+  c("local_people", "conservationists"),
+  c("local_people", "youth"),
+  c("organization", "local ejos"),
+  c("organization", "social movements"),
+  c("organization", "local government/political parties"),
+  c("organization", "international ejos"),
+  c("organization", "religious groups"),
+  c("organization", "trade unions"),
+  c("organization", "international politics"),
+  c("organization", "national governmental actors"),
+  c("economic_actors", "farmers"),
+  c("economic_actors", "local scientists/professionals"),
+  c("economic_actors", "artisanal miners"),
+  c("economic_actors", "fisher people"),
+  c("economic_actors", "industrial workers"),
+  c("economic_actors", "pastoralists"),
+  c("economic_actors", "landless peasants"),
+  c("economic_actors", "informal workers"),
+  c("excluded_marginalized", "indigenous groups or traditional communities"),
+  c("excluded_marginalized", "women"),
+  c("excluded_marginalized", "ethnically/racially discriminated groups")
 )
 
 # create for loop
@@ -494,72 +491,11 @@ forms_data %>%
 
 ################################# CONFLICT OUTCOMES ########################
 
-# load ejatlas data from json file
-#conflicts <- fromJSON(file = "~/Master thesis/Data/ejatlas.json")
-
-# get all elements of list in list
-#conflicts %>%
-  #map("ConflictOutcome")
-
 # count and arrange in descending order
 plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "ConflictOutcome"), "["))), desc(freq))
 
-# substitute values in list
-substitutes_outcomes = list(
-  c("criminalization of activists", "ha habido declaraciones oficiales que criminalizan peligrosamente las protestas contra el amo"),#repetition #
-  c("criminalization of activists", "enjuiciamientos de activistas."), #repetition
-
-  c("deaths, assassinations, murders", "la muerte de un indgena a manos de mineros en 2013 representa, en palabras de  ramn tomedes, presidente de medewadi, el prembulo a una bomba de tiempo que puede estallar en cualquier momento, haciendo que los indgena se rebelen para defenderse y exigir un trato ms justo \\(garca, 2013\\)."),
-  c("deaths, assassinations, murders", "las muertes de yanomami vinculadas a la minera ilegal plantean una seria amenaza a la supervivencia de este pueblo originario. masacres ocurridas en tiempos anteriores muestran los peligros que pueden correr los indgenas."),
-  c("deaths, assassinations, murders", "masacres"), #repetition
-  c("deaths, assassinations, murders", "assassination of environmental activist alfredo ernesto vracko neuenschwander"), #repetition
-  c("deaths, assassinations, murders", "los indgenas siguen sufriendo gran violencia en sus territorios y continan asesinando yukpas \\(el ltimo fue en julio de 2016\\). sus muertes siguen impunes. los autores intelectuales del asesinato de sabino romero no han sido sealados ni encarcelados."), #repetition
-  c("deaths, assassinations, murders", "death of maria choque, killed by police in 2011. the company is pursuing an international arbitration proceeding against the republic of peru under the canada-peru free trade agreement \\(\"tpa\"\\) before the international centre for settlement of investment disputes in washington d.c."), #repetition
-
-  c("violent targeting of activists", "amenazas de muerte, incendio de la casa de dirigente"),
-  c("violent targeting of activists", "lderes indgenas como el capitn de la comunidad de musuk pa, alexis romero, han denunciado hostigamiento por parte de las autoridades oficiales."),
-  c("violent targeting of activists", "use of  \"golpeadores\" hired by the company, to beat up people who complain"),
-  c("violent targeting of activists", "hostigamiento a los activistas" ),
-  c("violent targeting of activists", "yolanda oqueli de la organizacin frenam despus de participar en una manifestacin pacfica en contra del proyecto minero fue tiroteada y una bala se le aloj muy cerca del hgado."), #repetition
-
-    c("migration/displacement", "algunas pocas medidas compensatorias provenientes de polticas pblicas difcilmente pueden remediar los males que sufren estos pueblos indgenas. no se ha cumplido la demarcacin de tierras, lo cual es un mandato constitucional. la organizacin indgena, que anteriormente haba tenido ms fuerza, ha sido mermada, entre otras cosas, por la destruccin socio-ambiental y por la cooptacin de las mismas. la debilidad de estas organizaciones dificulta sobremanera que sus peticiones puedan ser odas. uno de los mecanismos que ejercen los pueblos originarios para paliar estas afectaciones son las migraciones, que en este caso suelen dirigirse a las ciudades. las fuentes de contaminacin que los afectan en el bajo delta siguen creciendo y en puertas aparece el relanzamiento de nuevos proyectos como el arco minero del orinoco, la plataforma deltana y el crecimiento de la faja petrolfera del orinoco."),
-  c("migration/displacement", "displacement of a whole village"), #repetition
-
-  c("court decision (undecided)", "court case in progress.\nthe aymara community of cancosa is suing bhp billiton for water rights and environmental damage."),
-  c("court decision (undecided)", "law-suits are ongoing \\(2014\\)"), #repetition
-  c("court decision (victory for environmental justice)", "successful criminal prosecution of owner of mining firm"), #repetition
-  c("court decision (undecided)", "remains to be seen. there will be court cases, calls for compensation."), #repetition
-  c("court decision (victory for environmental justice)", "the public procurator has indicted sama, asking for reparations."), #repetition
-
-  c("new legislation", "argentinas congress passed a law in september 2010 that seeks to protect environmentally sensitive glaciers by imposing strict limits on mining. the measure prohibits mining near glaciers along argentina's border with chile."),
-
-  c("application of existing regulations", "las mineras son multadas pero a pesar de eso siguen contaminando"),
-  c("application of existing regulations", "penalizaciones a la empresa por derrames."),
-  c("application of existing regulations", "application of international regulation \\(ilo 169\\)"), #repetition
-
-  c("strengthening of participation", "referendum o consultas populares como en el municipio de piedras, que la compaa quiere usar para embalses de lodos."),
-
-  c("project cancelled", "after the referendum the company decided to stop the project."), #repetition
-  c("project cancelled", "decisin de rechazar el proyecto por parte de la legislatura de mendoza"), #repetition
-
-  c("project temporarily suspended", "the gold corp company suspended the project, because of opposition in el salvador \\(trns-frontier project\\) and because of low prices for gold in 2013."),
-
-  c("under negotiation", "compensations in negotiation"),
-
-  c("negotiated alternative solution", "solucion alternativa negociada"),
-  c("negotiated alternative solution", "a resettlement plan"), #repetition
-
-  c("new environmental impact assessment/study", "estudios de contaminacion en el agua"),
-
-    c("declaration of location as ecological municipality, natural or religious sanctuary or cultural heritage", "apelacion al congreso de la union\n\nconvenio 169\n\ndeclaracion como pueblo mgico para el turismo"),
-  c("declaration of location as ecological municipality, natural or religious sanctuary or cultural heritage", "also angangueo was notified in 2012 as a pueblo mgico, for tourist attraction."),
-  c("declaration of location as ecological municipality, natural or religious sanctuary or cultural heritage", "an alliance has been sought between local farmers and inhabitants concerned with water from the pramo and conservationist organizations, to declare the pramo del almorzadero as a nature reserve."),
-  c("declaration of location as ecological municipality, natural or religious sanctuary or cultural heritage", "aprobacin del proyecto de ley declarando a sierra de la ventana como paisaje protegido de inters provincial de la"), #provincia de buenos aires
-
-  c("withdrawal of company/investment",  "the mining company was expulsed"), #repetition
-  c("withdrawal of company/investment", "the company left the area after finishing its exploration activities.") #repetition
-
-)
+# create substitute values
+substitutes_outcomes = read_delim("./substitutes/outcomes.csv", delim=';', escape_double=FALSE, escape_backslash=TRUE, quote='')
 
 remove_outcomes = c("",
                     "the anti-asbestos association of bahia was present at rio 20 complaining against the companies.", #form of mobilization
@@ -663,53 +599,42 @@ remove_outcomes = c("",
 
       "realization of a public hearing by plataforma dhesca brazil. \n\ncreation of a virtual space of discussion of local problems by mopsam.", #general assemblies, public forums or discussion tables -> not as own category
   "conformacin de redes de asambleas provinciales. este es el segundo caso de una formacin de una asamblea contra la megaminera metalfera en neuqun (el primer caso son las asambleas de loncopu y campana mahuida), y articula con asambleas de junn de los andes, san martn de los andes, alumin, entre otras." #general assemblies, public forums or discussion tables -> not as own category
-
-
-      )
-
-
-
-
+)
 # create for loop
 for(i in seq(1,length(conflicts))){
   if(typeof(conflicts[[i]]$ConflictOutcome)=="list"){
     print(conflicts[[i]]$ConflictOutcome[1])
-    #conflicts[[i]]$SpecificCommodities = unlist(conflicts[[i]]$SpecificCommodities)
     conflicts[[i]]$ConflictOutcome = ""
   }
   # remove whitespace
   conflicts[[i]]$ConflictOutcome = trimws(conflicts[[i]]$ConflictOutcome, which = c("both"))
-
+  
   # lowercase all
   conflicts[[i]]$ConflictOutcome = unlist(lapply(conflicts[[i]]$ConflictOutcome, tolower))
-
-
-
+  
+  # split elements separated by " // "
+  conflicts[[i]]$ConflictOutcome = unlist(strsplit(conflicts[[i]]$ConflictOutcome, " // "))
+  
   # substitute pseudonyms
-  for(j in substitutes_outcomes){
-    conflicts[[i]]$ConflictOutcome = gsub(j[2], j[1], conflicts[[i]]$ConflictOutcome)
+  for(j in seq(nrow(substitutes_outcomes))){
+    conflicts[[i]]$ConflictOutcome <- gsub(toString(substitutes_outcomes[j,]$old), toString(substitutes_outcomes[j,]$new), conflicts[[i]]$ConflictOutcome)
     conflicts[[i]]$ConflictOutcome <- unique(conflicts[[i]]$ConflictOutcome)
   }
   for(j in remove_outcomes){
     conflicts[[i]]$ConflictOutcome = conflicts[[i]]$ConflictOutcome[conflicts[[i]]$ConflictOutcome != j]
+    
   }
 }
 
+
 # add elements
 conflicts[[120]]$ConflictOutcome <- c("criminalization of activists", "declaration of location as ecological municipality, natural or religious sanctuary or cultural heritage" )
-# el ministerio de energia y minas interpuso demandas en contra de tres campesinos por delitos de terrorismo, sabotaje, destruccion de propiedad y robo. este es el primer caso de un juicio en ecuador por terrorismo que se haya basado en actividades de protesta en contra de actividades mineras.(ejatlas)
-#en consecuencia, las fuerzas vivas de intag impulsaron la creacion de una ordenanza ecologica para limitar o prohibir, de ser el caso, la mineria. esto culmino con la declaratoria del canton cotacachi como el primer canton ecologico. (ejatlas)
 conflicts[[242]]$ConflictOutcome <- c("project temporarily suspended")
-
-
-# show clean list
-for(i in conflicts){
-  print(i$ConflictOutcome)
-}
-
 
 # count again
 plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "ConflictOutcome"), "["))), desc(freq))
+
+# Figure Conflict Outcomes/Responses
 
 # create dataframe for plot
 outcomes_data <- plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "ConflictOutcome"), "["))), desc(freq))
@@ -720,8 +645,7 @@ outcomes_data <- outcomes_data %>%
 
 # group into violent and institutional outcomes
 outcomes_violent <- outcomes_data[c(3,4,5,6,9,10),]
-outcomes_institutional <- outcomes_data[c(1,2,7,8,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26),]
-
+outcomes_institutional <- outcomes_data[c(1,2,7,8,11,12,13,14,15,16,17,18,19,20,21,22,23),] # without 24,25,26 because count > 10
 
 # barplot with ggplot2
 library(ggplot2)
@@ -756,17 +680,9 @@ outcomes_institutional %>%
 
 ###################### ENVIRONMENTAL IMPACTS  #############################
 
-# load ejatlas data from json file
-#conflicts <- fromJSON(file = "~/Master thesis/Data/ejatlas.json")
-
-# get all elements of list in list
-#conflicts %>%
- # map("EnvironmentalImpactsVisible")
-
 # count and arrange in descending order
 plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "EnvironmentalImpactsVisible"), "["))), desc(freq))
 plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "EnvironmentalImpactsPotential"), "["))), desc(freq))
-
 
 # rename first part before comma and remove rest (duplicates)
 
@@ -781,7 +697,7 @@ substitutes_eimpacts = list(
   c("floods \\(river, coastal, mudflow\\)", "floods \\(river")
 )
 
-remove_eimpacts = c("agro-diversity)", "biological) quality", "mudflow)")
+remove_eimpacts = c("agro-diversity)", "biological) quality", "mudflow)", "coastal")
 
 # create for loop for ENVIRONMENTAL IMPACTS VISIBLE
 
@@ -837,9 +753,6 @@ plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "EnvironmentalImpactsVisi
 plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "EnvironmentalImpactsPotential"), "["))), desc(freq))
 
 ################################ HEALTH IMPACTS ###########################
-
-# load ejatlas data from json file
-#conflicts <- fromJSON(file = "~/Master thesis/Data/ejatlas.json")
 
 # arrange in descending order
 plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "HealthImpactsVisible"), "["))), desc(freq))
@@ -917,13 +830,9 @@ plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "HealthImpactsPotential")
 
 ########################## SOCIOECONOMIC IMPACTS ############################
 
-# load ejatlas data from json file
-#conflicts <- fromJSON(file = "~/Master thesis/Data/ejatlas.json")
-
 # arrange in descending order
 plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "SocioeconomicImpactsVisible"), "["))), desc(freq))
 plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "SocioeconomicImpactsPotential"), "["))), desc(freq))
-
 
 # rename first part before comma and remove rest (duplicates)
 # Lack of work security, labour absenteeism, firings, unemployment
