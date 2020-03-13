@@ -131,7 +131,24 @@ for(i in seq(1,length(conflicts))){
   # now all conflicts in which CompanyNames equals Country are "local", when the term illegal/ilegal shows up, they are "illegal", else they are "foreign"
   plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "CompanyNames"), "["))), desc(freq))
   
+
+# Pie chart on operators (company origin/illegal mining)
+library(RColorBrewer)
   
+operator_data <- plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "CompanyNames"), "["))), desc(freq))
+
+operator_data <- operator_data %>%
+  dplyr::select(operator_origin = "x", count = "freq")
+
+slices <- operator_data$count
+lbls <- c("foreign company", "local company", "illegal mining")
+myPalette <- brewer.pal(5, "Set2")
+pct <- round(slices/sum(slices)*100)
+lbls <- paste(lbls,"(",pct)
+lbls <- paste(lbls,"%)",sep="")
+
+pie(operator_data$count, labels=lbls, border="white", col=myPalette, main="Operator Origin")
+
 
   ############################## COMMODITY ###################################
   
