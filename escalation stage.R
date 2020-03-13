@@ -6,6 +6,9 @@ library(plyr)
 library(dplyr)
 library(stringr)
 library(tidyverse)
+library(ggplot2)
+library(forcats)
+
 library(hash)
 
 # set working directory
@@ -103,5 +106,21 @@ for(i in seq(1,length(conflicts))){
 # count values for variable escalation stage
 plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "EscalationStage"), "["))), desc(freq))
 
+# Barplot EscalationStage
+stages_data <- plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "EscalationStage"), "["))), desc(freq))
+
+stages_data <- stages_data %>%
+  dplyr::select(escalation_stage = "x", count = "freq")
+
+stages_data$escalation_stage <- as.factor(stages_data$escalation_stage)
+
+# Reorder following the value of another column:
+stages_data %>%
+  mutate(escalation_stage = fct_reorder(escalation_stage, count)) %>%
+  ggplot( aes(x=escalation_stage, y=count)) +
+  geom_bar(stat="identity", fill="blue", alpha=.6, width=.4) +
+  #coord_flip() +
+  xlab("") +
+  theme_bw()
 
 

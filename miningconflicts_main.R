@@ -6,6 +6,8 @@ library(plyr)
 library(dplyr)
 library(stringr)
 library(tidyverse)
+library(ggplot2)
+library(forcats)
 
 # set working directory
 if (dir.exists("~/Master thesis/Code/mining-conflicts")){
