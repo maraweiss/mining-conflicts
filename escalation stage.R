@@ -118,7 +118,7 @@ stages_data$escalation_stage <- as.factor(stages_data$escalation_stage)
 stages_data %>%
   mutate(escalation_stage = fct_reorder(escalation_stage, count)) %>%
   ggplot( aes(x=escalation_stage, y=count)) +
-  geom_bar(stat="identity", fill="blue", alpha=.6, width=.4) +
+  geom_bar(stat="identity", fill="purple", alpha=.6, width=.4) +
   #coord_flip() +
   xlab("") +
   theme_bw()
