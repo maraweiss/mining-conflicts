@@ -18,7 +18,7 @@ if (dir.exists("~/Master thesis/Code/mining-conflicts")){
   setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 }
 # hash environment
-stages <- hash()
+stages <- hash::hash()
 
 # define stages according to forms of mobilization
 stages[["street protest/marches"]] <- 4

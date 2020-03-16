@@ -17,8 +17,8 @@ base_metals;zinc
 base_metals;lead
 light_metals;aluminumbauxite
 light_metals;titanium_ores
-technology_elements;antimony
 technology_elements;lithium
+technology_elements;antimony
 technology_elements;mercury
 technology_elements;rare_metals
 technology_elements;tantalite
