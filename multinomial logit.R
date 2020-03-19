@@ -60,10 +60,12 @@ dfconflicts$EscalationStage <- as.factor(unlist(dfconflicts$EscalationStage))
 # # BL: uruguay, latent
 # screenreg(list(multinom5), custom.model.names =  c("All commodities"))
 
-multinom4 <- multinom(formula = EscalationStage ~ argentina + bolivia + brazil + chile + colombia + costarica + dominicanrepublic + ecuador + elsalvador + guatemala + guyana + honduras + jamaica + mexico + nicaragua + panama + peru + puertorico + venezuela + agricultural_chemical_minerals + base_metals + biological_resources + diamonds + electricity + energy_mineral_resources + ferroalloy_metals + ferrous_metals + gemstones + industrial_waste + light_metals + nonmetallic_minerals + precious_metals + radioactive_ores + recycled_metals + technology_elements + tourism_services + preventive + reaction + reparations + economic_actors + excluded_marginalized + local_people + organization + foreign + illegal + EnvironmentalImpactsVisible + EnvironmentalImpactsPotential + HealthImpactsVisible + HealthImpactsPotential + SocioeconomicImpactsVisible + SocioeconomicImpactsPotential, data = dfconflicts )
+multinom4 <- multinom(formula = EscalationStage ~ argentina + bolivia + brazil + chile + colombia + costarica + dominicanrepublic + ecuador + elsalvador + guatemala + guyana + honduras + jamaica + mexico + nicaragua + panama + peru + puertorico + venezuela + agricultural_chemical_minerals + base_metals + biological_resources + diamonds + electricity + energy_mineral_resources + ferroalloy_metals + ferrous_metals + gemstones + industrial_waste + light_metals + nonmetallic_minerals + precious_metals + radioactive_ores + recycled_metals + technology_elements + tourism_services + preventive + reaction + reparations + economic_actors + excluded_marginalized + local_people + organization + foreign + illegal + EnvironmentalImpactsVisible + EnvironmentalImpactsPotential + HealthImpactsVisible + HealthImpactsPotential + SocioeconomicImpactsVisible + SocioeconomicImpactsPotential, data = dfconflicts, maxit=500)
 # BL: uruguay, latent
 screenreg(list(multinom4), custom.model.names =  c("Types of commodities"))
 
+# change baseline
+dfconflicts$EscalationStage <- relevel(x=dfconflicts$EscalationStage, ref="5")
 
 
-
+coefficients(multinom4)
