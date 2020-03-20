@@ -22,7 +22,7 @@ conflicts <- fromJSON(file = "ejatlas.json")
 ##################### COUNTRY ############################################
 
 # count and arrange in descending order
-plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "Country"), "["))), desc(freq))
+plyr::arrange(plyr::count(unlist(lapply(purrr::map(conflicts, "Country"), "["))), desc(freq))
 
 # remove whitespace
 for(i in seq(1,length(conflicts))){
@@ -38,28 +38,28 @@ conflicts[[i]]$Country <- unlist(lapply(conflicts[[i]]$Country, tolower))
 
 # get all companynames
 conflicts %>%
-  map("CompanyNames")
+  purrr::map("CompanyNames")
   
 # manually complete information for cases without company names or companies without info on origin
-  conflicts[[4]]$CompanyNames <- c("illegal")
-  conflicts[[6]]$CompanyNames <- c("illegal")
-  conflicts[[42]]$CompanyNames <- c("illegal")
-  conflicts[[46]]$CompanyNames <- c("illegal")
-  conflicts[[58]]$CompanyNames <- c("illegal")
-  conflicts[[59]]$CompanyNames <- c("illegal")
-  conflicts[[79]]$CompanyNames <- c("illegal")
-  conflicts[[114]]$CompanyNames <- c("illegal")
-  conflicts[[117]]$CompanyNames <- c("illegal")
-  conflicts[[118]]$CompanyNames <- c("illegal")
-  conflicts[[156]]$CompanyNames <- c("illegal")
-  conflicts[[181]]$CompanyNames <- c("illegal")
-  conflicts[[183]]$CompanyNames <- c("illegal")
-  conflicts[[185]]$CompanyNames <- c("illegal")
-  conflicts[[187]]$CompanyNames <- c("illegal")
-  conflicts[[189]]$CompanyNames <- c("illegal")
-  conflicts[[231]]$CompanyNames <- c("illegal")
-  conflicts[[245]]$CompanyNames <- c("illegal")
-  conflicts[[282]]$CompanyNames <- c("illegal")
+  conflicts[[4]]$CompanyNames <- c("illegal_mining")
+  conflicts[[6]]$CompanyNames <- c("illegal_mining")
+  conflicts[[42]]$CompanyNames <- c("illegal_mining")
+  conflicts[[46]]$CompanyNames <- c("illegal_mining")
+  conflicts[[58]]$CompanyNames <- c("illegal_mining")
+  conflicts[[59]]$CompanyNames <- c("illegal_mining")
+  conflicts[[79]]$CompanyNames <- c("illegal_mining")
+  conflicts[[114]]$CompanyNames <- c("illegal_mining")
+  conflicts[[117]]$CompanyNames <- c("illegal_mining")
+  conflicts[[118]]$CompanyNames <- c("illegal_mining")
+  conflicts[[156]]$CompanyNames <- c("illegal_mining")
+  conflicts[[181]]$CompanyNames <- c("illegal_mining")
+  conflicts[[183]]$CompanyNames <- c("illegal_mining")
+  conflicts[[185]]$CompanyNames <- c("illegal_mining")
+  conflicts[[187]]$CompanyNames <- c("illegal_mining")
+  conflicts[[189]]$CompanyNames <- c("illegal_mining")
+  conflicts[[231]]$CompanyNames <- c("illegal_mining")
+  conflicts[[245]]$CompanyNames <- c("illegal_mining")
+  conflicts[[282]]$CompanyNames <- c("illegal_mining")
   
   conflicts[[27]]$CompanyNames <- c("Sundance Minerals Ltd. Of Vancouver from Canada")
   conflicts[[33]]$CompanyNames <- c("United States")
@@ -100,10 +100,10 @@ for(i in seq(1,length(conflicts))){
     if(length(companies) > 0){
       for (j in seq(1, length(companies))){
         if(grepl("\\b(\\w*ilegal\\w*)\\b", companies[j])){
-          conflicts[[i]]$CompanyNames[j] = "illegal"
+          conflicts[[i]]$CompanyNames[j] = "illegal_mining"
         }
         else if (grepl("\\b(\\w*illegal\\w*)\\b", companies[j])){
-          conflicts[[i]]$CompanyNames[j] = "illegal"
+          conflicts[[i]]$CompanyNames[j] = "illegal_mining"
         }
       }
       # all companynames with "from Country XY" are renamed as the country
@@ -114,14 +114,14 @@ for(i in seq(1,length(conflicts))){
         }
       }
       if (all(unique(conflicts[[i]]$CompanyNames) == conflicts[[i]]$Country)){
-        conflicts[[i]]$CompanyNames = "local"
+        conflicts[[i]]$CompanyNames = "local_company"
       }
       else{
-        if ('illegal' %in% conflicts[[i]]$CompanyNames){
-          conflicts[[i]]$CompanyNames = "illegal"
+        if ('illegal_mining' %in% conflicts[[i]]$CompanyNames){
+          conflicts[[i]]$CompanyNames = "illegal_mining"
         }
         else{
-          conflicts[[i]]$CompanyNames = "foreign"
+          conflicts[[i]]$CompanyNames = "foreign_company"
         }
       }
     }
@@ -129,13 +129,13 @@ for(i in seq(1,length(conflicts))){
 } 
   
   # now all conflicts in which CompanyNames equals Country are "local", when the term illegal/ilegal shows up, they are "illegal", else they are "foreign"
-  plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "CompanyNames"), "["))), desc(freq))
+  plyr::arrange(plyr::count(unlist(lapply(purrr::map(conflicts, "CompanyNames"), "["))), desc(freq))
   
 
 # Pie chart on operators (company origin/illegal mining)
 library(RColorBrewer)
   
-operator_data <- plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "CompanyNames"), "["))), desc(freq))
+operator_data <- plyr::arrange(plyr::count(unlist(lapply(purrr::map(conflicts, "CompanyNames"), "["))), desc(freq))
 
 operator_data <- operator_data %>%
   dplyr::select(operator_origin = "x", count = "freq")
@@ -153,7 +153,7 @@ pie(operator_data$count, labels=lbls, border="white", col=myPalette, main="Opera
   ############################## COMMODITY ###################################
   
   # count and arrange in descending order
-  plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "SpecificCommodities"), "["))), desc(freq))
+  plyr::arrange(plyr::count(unlist(lapply(purrr::map(conflicts, "SpecificCommodities"), "["))), desc(freq))
   
   # substitute values in list
   substitutes_commodity = read_delim("./substitutes/commodities.csv", delim=';', escape_double=FALSE, escape_backslash=TRUE, quote='"')
@@ -216,7 +216,7 @@ pie(operator_data$count, labels=lbls, border="white", col=myPalette, main="Opera
   conflicts[[61]]$SpecificCommodities[2] <- "lime"
 
   # count again
-  plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "SpecificCommodities"), "["))), desc(freq))
+  plyr::arrange(plyr::count(unlist(lapply(purrr::map(conflicts, "SpecificCommodities"), "["))), desc(freq))
   
   # categorization of commodities
   
@@ -224,7 +224,7 @@ pie(operator_data$count, labels=lbls, border="white", col=myPalette, main="Opera
 ################################ REACTION STAGE ##############################
 
 # count and arrange in descending order
-plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "ReactionStage"), "["))), desc(freq))
+plyr::arrange(plyr::count(unlist(lapply(purrr::map(conflicts, "ReactionStage"), "["))), desc(freq))
   
 # create substitute values
 substitutes_reaction = read_delim("./substitutes/reaction.csv", delim=';', escape_double=FALSE, escape_backslash=TRUE, quote='"')
@@ -246,13 +246,13 @@ for(i in seq(1,length(conflicts))){
 conflicts[[91]]$ReactionStage <- c("unknown")
 
 # count again
-plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "ReactionStage"), "["))), desc(freq))
+plyr::arrange(plyr::count(unlist(lapply(purrr::map(conflicts, "ReactionStage"), "["))), desc(freq))
 
 
 ############################### MOBILIZING GROUPS ###########################
 
 # count and arrange in descending order
-plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "GroupsMobilizing"), "["))), desc(freq))
+plyr::arrange(plyr::count(unlist(lapply(purrr::map(conflicts, "GroupsMobilizing"), "["))), desc(freq))
 
 # create substitute values
 substitutes_groups = read_delim("./substitutes/groups.csv", delim=';', escape_double=FALSE, escape_backslash=TRUE, quote='')
@@ -296,11 +296,11 @@ for(i in seq(1,length(conflicts))){
 # }
 
 # count again
-plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "GroupsMobilizing"), "["))), desc(freq))
+plyr::arrange(plyr::count(unlist(lapply(purrr::map(conflicts, "GroupsMobilizing"), "["))), desc(freq))
 
 # Figure Mobilizing Groups
 
-groups_data <- plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "GroupsMobilizing"), "["))), desc(freq))
+groups_data <- plyr::arrange(plyr::count(unlist(lapply(purrr::map(conflicts, "GroupsMobilizing"), "["))), desc(freq))
 
 groups_data <- groups_data %>%
   dplyr::select(mobilizing_groups = "x", count = "freq")
@@ -363,7 +363,7 @@ for(i in seq(1,length(conflicts))){
 }
 
 # count again
-plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "GroupsMobilizing"), "["))), desc(freq))
+plyr::arrange(plyr::count(unlist(lapply(purrr::map(conflicts, "GroupsMobilizing"), "["))), desc(freq))
 
 # as table
 
@@ -372,7 +372,7 @@ plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "GroupsMobilizing"), "[")
 ######################### FORMS OF MOBILIZATION ############################
 
 # count and arrange in descending order
-plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "FormsOfMobilization"), "["))), desc(freq))
+plyr::arrange(plyr::count(unlist(lapply(purrr::map(conflicts, "FormsOfMobilization"), "["))), desc(freq))
 
 # create substitute values
 substitutes_forms = read_delim("./substitutes/forms.csv", delim=';', escape_double=FALSE, escape_backslash=TRUE, quote='')
@@ -461,11 +461,11 @@ for(i in seq(1,length(conflicts))){
 # }
 
 # count again
-plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "FormsOfMobilization"), "["))), desc(freq))
+plyr::arrange(plyr::count(unlist(lapply(purrr::map(conflicts, "FormsOfMobilization"), "["))), desc(freq))
 
 # Figure FormsOfMobilization
 
-forms_data <- plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "FormsOfMobilization"), "["))), desc(freq))
+forms_data <- plyr::arrange(plyr::count(unlist(lapply(purrr::map(conflicts, "FormsOfMobilization"), "["))), desc(freq))
 
 # rename columns
 forms_data <- forms_data %>%
@@ -492,7 +492,7 @@ forms_data %>%
 ################################# CONFLICT OUTCOMES ########################
 
 # count and arrange in descending order
-plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "ConflictOutcome"), "["))), desc(freq))
+plyr::arrange(plyr::count(unlist(lapply(purrr::map(conflicts, "ConflictOutcome"), "["))), desc(freq))
 
 # create substitute values
 substitutes_outcomes = read_delim("./substitutes/outcomes.csv", delim=';', escape_double=FALSE, escape_backslash=TRUE, quote='')
@@ -632,12 +632,12 @@ conflicts[[120]]$ConflictOutcome <- c("criminalization of activists", "declarati
 conflicts[[242]]$ConflictOutcome <- c("project temporarily suspended")
 
 # count again
-plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "ConflictOutcome"), "["))), desc(freq))
+plyr::arrange(plyr::count(unlist(lapply(purrr::map(conflicts, "ConflictOutcome"), "["))), desc(freq))
 
 # Figure Conflict Outcomes/Responses
 
 # create dataframe for plot
-outcomes_data <- plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "ConflictOutcome"), "["))), desc(freq))
+outcomes_data <- plyr::arrange(plyr::count(unlist(lapply(purrr::map(conflicts, "ConflictOutcome"), "["))), desc(freq))
 
 # rename columns
 outcomes_data <- outcomes_data %>%
@@ -681,8 +681,8 @@ outcomes_institutional %>%
 ###################### ENVIRONMENTAL IMPACTS  #############################
 
 # count and arrange in descending order
-plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "EnvironmentalImpactsVisible"), "["))), desc(freq))
-plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "EnvironmentalImpactsPotential"), "["))), desc(freq))
+plyr::arrange(plyr::count(unlist(lapply(purrr::map(conflicts, "EnvironmentalImpactsVisible"), "["))), desc(freq))
+plyr::arrange(plyr::count(unlist(lapply(purrr::map(conflicts, "EnvironmentalImpactsPotential"), "["))), desc(freq))
 
 # rename first part before comma and remove rest (duplicates)
 
@@ -749,14 +749,14 @@ for(i in seq(1,length(conflicts))){
 }
 
 # count and arrange in descending order
-plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "EnvironmentalImpactsVisible"), "["))), desc(freq))
-plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "EnvironmentalImpactsPotential"), "["))), desc(freq))
+plyr::arrange(plyr::count(unlist(lapply(purrr::map(conflicts, "EnvironmentalImpactsVisible"), "["))), desc(freq))
+plyr::arrange(plyr::count(unlist(lapply(purrr::map(conflicts, "EnvironmentalImpactsPotential"), "["))), desc(freq))
 
 ################################ HEALTH IMPACTS ###########################
 
 # arrange in descending order
-plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "HealthImpactsVisible"), "["))), desc(freq))
-plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "HealthImpactsPotential"), "["))), desc(freq))
+plyr::arrange(plyr::count(unlist(lapply(purrr::map(conflicts, "HealthImpactsVisible"), "["))), desc(freq))
+plyr::arrange(plyr::count(unlist(lapply(purrr::map(conflicts, "HealthImpactsPotential"), "["))), desc(freq))
 
 # rename first part before comma and remove rest (duplicates)
 
@@ -824,15 +824,15 @@ for(i in seq(1,length(conflicts))){
 }
 
 # arrange in descending order
-plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "HealthImpactsVisible"), "["))), desc(freq))
-plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "HealthImpactsPotential"), "["))), desc(freq))
+plyr::arrange(plyr::count(unlist(lapply(purrr::map(conflicts, "HealthImpactsVisible"), "["))), desc(freq))
+plyr::arrange(plyr::count(unlist(lapply(purrr::map(conflicts, "HealthImpactsPotential"), "["))), desc(freq))
 
 
 ########################## SOCIOECONOMIC IMPACTS ############################
 
 # arrange in descending order
-plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "SocioeconomicImpactsVisible"), "["))), desc(freq))
-plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "SocioeconomicImpactsPotential"), "["))), desc(freq))
+plyr::arrange(plyr::count(unlist(lapply(purrr::map(conflicts, "SocioeconomicImpactsVisible"), "["))), desc(freq))
+plyr::arrange(plyr::count(unlist(lapply(purrr::map(conflicts, "SocioeconomicImpactsPotential"), "["))), desc(freq))
 
 # rename first part before comma and remove rest (duplicates)
 # Lack of work security, labour absenteeism, firings, unemployment
@@ -895,5 +895,5 @@ for(i in seq(1,length(conflicts))){
 }
 
 # arrange in descending order again
-plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "SocioeconomicImpactsVisible"), "["))), desc(freq))
-plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "SocioeconomicImpactsPotential"), "["))), desc(freq))
+plyr::arrange(plyr::count(unlist(lapply(purrr::map(conflicts, "SocioeconomicImpactsVisible"), "["))), desc(freq))
+plyr::arrange(plyr::count(unlist(lapply(purrr::map(conflicts, "SocioeconomicImpactsPotential"), "["))), desc(freq))
