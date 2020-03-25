@@ -54,3 +54,5 @@ biological_resources;land
 biological_resources;water
 biological_resources;timber
 biological_resources;rubber
+diam_gem;diamonds
+diam_gem;gemstones
