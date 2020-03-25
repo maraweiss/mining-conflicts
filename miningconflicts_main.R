@@ -32,6 +32,24 @@ for(i in seq(1,length(conflicts))){
 conflicts[[i]]$Country <- unlist(lapply(conflicts[[i]]$Country, tolower))
 }
 
+# substitute values in list
+substitutes_countries = read_delim("./substitutes/countries.csv", delim=';', escape_double=FALSE, escape_backslash=TRUE, quote='"')
+
+# create for loop
+for(i in seq(1,length(conflicts))){
+  if(typeof(conflicts[[i]]$Country)=="list"){
+    print(conflicts[[i]]$Country[1])
+    conflicts[[i]]$Country = ""
+  }
+  
+  # substitute pseudonyms
+  for(j in seq(nrow(substitutes_countries))){
+    conflicts[[i]]$Country <- gsub(toString(substitutes_countries[j,]$old), toString(substitutes_countries[j,]$new), conflicts[[i]]$Country)
+  }
+}
+
+# count and arrange in descending order again
+plyr::arrange(plyr::count(unlist(lapply(purrr::map(conflicts, "Country"), "["))), desc(freq))
 
 
 ######################## COMPANY ORIGIN and ILLEGAL MINING ################
