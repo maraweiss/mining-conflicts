@@ -333,8 +333,9 @@ groups_data %>%
   ggplot( aes(x=mobilizing_groups, y=count)) +
   geom_bar(stat="identity", fill="dark blue", alpha=.6, width=.4) +
   coord_flip() +
-  xlab("") +
-  ylab("")+
+  ggtitle("Mobilizing Groups in Mining Conflicts")+
+  xlab("")+
+  ylab("number of observations")+
   theme_bw()
 
 # categorization of groups
@@ -504,8 +505,9 @@ forms_data %>%
   ggplot( aes(x=forms_of_mobilization, y=count)) +
   geom_bar(stat="identity", fill="dark blue", alpha=.6, width=.4) +
   coord_flip() +
-  xlab("") +
-  ylab("") +
+  ggtitle("Forms Of Mobilization in Mining Conflicts")+
+  xlab("")+
+  ylab("number of observations")+
   theme_bw()
 
 
@@ -686,8 +688,9 @@ outcomes_violent %>%
   ggplot( aes(x=outcomes, y=count)) +
   geom_bar(stat="identity", fill="dark blue", alpha=.6, width=.4) +
   coord_flip() +
-  xlab("") +
-  ylab("") +
+  ggtitle("Violent Outcomes in Mining Conflicts")+
+  xlab("")+
+  ylab("number of observations")+
   theme_bw()
 
 # plot institutional outcomes
@@ -696,8 +699,9 @@ outcomes_institutional %>%
   ggplot( aes(x=outcomes, y=count)) +
   geom_bar(stat="identity", fill="dark blue", alpha=.6, width=.4) +
   coord_flip() +
-  xlab("") +
-  ylab("") +
+  ggtitle("Institutional Outcomes in Mining Conflicts")+
+  xlab("")+
+  ylab("number of observations")+
   theme_bw()
 
 ###################### ENVIRONMENTAL IMPACTS  #############################
