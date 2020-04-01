@@ -160,7 +160,7 @@ operator_data <- operator_data %>%
 
 slices <- operator_data$count
 lbls <- c("foreign company", "local company", "illegal mining")
-myPalette <- brewer.pal(5, "Set2")
+myPalette <- brewer.pal(3, "Blues")
 pct <- round(slices/sum(slices)*100)
 lbls <- paste(lbls,"(",pct)
 lbls <- paste(lbls,"%)",sep="")
@@ -331,9 +331,10 @@ library(forcats)
 groups_data %>%
   mutate(mobilizing_groups = fct_reorder(mobilizing_groups, count)) %>%
   ggplot( aes(x=mobilizing_groups, y=count)) +
-  geom_bar(stat="identity", fill="dark red", alpha=.6, width=.4) +
+  geom_bar(stat="identity", fill="dark blue", alpha=.6, width=.4) +
   coord_flip() +
   xlab("") +
+  ylab("")+
   theme_bw()
 
 # categorization of groups
@@ -504,6 +505,7 @@ forms_data %>%
   geom_bar(stat="identity", fill="dark blue", alpha=.6, width=.4) +
   coord_flip() +
   xlab("") +
+  ylab("") +
   theme_bw()
 
 
@@ -682,18 +684,20 @@ outcomes_data %>%
 outcomes_violent %>%
   mutate(outcomes = fct_reorder(outcomes, count)) %>%
   ggplot( aes(x=outcomes, y=count)) +
-  geom_bar(stat="identity", fill="black", alpha=.6, width=.4) +
+  geom_bar(stat="identity", fill="dark blue", alpha=.6, width=.4) +
   coord_flip() +
   xlab("") +
+  ylab("") +
   theme_bw()
 
 # plot institutional outcomes
 outcomes_institutional %>%
   mutate(outcomes = fct_reorder(outcomes, count)) %>%
   ggplot( aes(x=outcomes, y=count)) +
-  geom_bar(stat="identity", fill="dark green", alpha=.6, width=.4) +
+  geom_bar(stat="identity", fill="dark blue", alpha=.6, width=.4) +
   coord_flip() +
   xlab("") +
+  ylab("") +
   theme_bw()
 
 ###################### ENVIRONMENTAL IMPACTS  #############################
