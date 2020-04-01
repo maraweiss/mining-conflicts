@@ -1,4 +1,4 @@
-# define variable escalation stage #
+# define variable escalation stage # stage 5 to 8 # 
 
 # load libraries
 library(rjson)
@@ -104,23 +104,24 @@ for(i in seq(1,length(conflicts))){
   conflicts[[i]]$EscalationStage = max_stage}
 
 # count values for variable escalation stage
-plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "EscalationStage"), "["))), desc(freq))
+plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "EscalationStage"), "["))), desc(x))
 
 # Barplot EscalationStage
-stages_data <- plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "EscalationStage"), "["))), desc(freq))
+stages_data <- plyr::arrange(plyr::count(unlist(lapply(map(conflicts, "EscalationStage"), "["))), desc(x))
 
 stages_data <- stages_data %>%
   dplyr::select(escalation_stage = "x", count = "freq")
 
 stages_data$escalation_stage <- as.factor(stages_data$escalation_stage)
 
-# Reorder following the value of another column:
+# plot
 stages_data %>%
-  mutate(escalation_stage = fct_reorder(escalation_stage, count)) %>%
+  #mutate(escalation_stage = fct_reorder(escalation_stage, count))%>%
   ggplot( aes(x=escalation_stage, y=count)) +
-  geom_bar(stat="identity", fill="purple", alpha=.6, width=.4) +
+  geom_bar(stat="identity", fill="dark blue", alpha=.6, width=.4) +
   #coord_flip() +
-  xlab("") +
-  theme_bw()
+  labs(title = "Conflicts per Escalation Stage", x = "Escalation Stages", y = "Number of Conflicts")+
+  theme_bw()+
+  theme(plot.title = element_text(hjust = 0.5))
 
 
